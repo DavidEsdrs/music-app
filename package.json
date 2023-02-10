@@ -1,0 +1,20 @@
+{
+  "name": "music-app-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.3.12"
+  },
+  "devDependencies": {
+    "tsx": "^3.12.3",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "dev": "tsx src/server.ts"
+  }
+}
