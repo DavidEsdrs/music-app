@@ -1,15 +1,14 @@
 import "reflect-metadata";
 import "express-async-errors";
 import express from "express";
-import dotenv from "dotenv";
 import router from "./router";
-
-dotenv.config();
+import { errorHandling } from "./middlewares/ErrorHandling";
 
 const server = express();
 
 server.use(express.json());
 server.use(router);
+server.use(errorHandling);
 
 const SERVER_PORT = process.env.SERVER_PORT || 4343;
 
