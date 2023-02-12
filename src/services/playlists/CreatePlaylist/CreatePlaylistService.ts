@@ -8,7 +8,10 @@ export class CreatePlaylistService {
 
     async execute(args: ICreatePlaylistDTO) {
         const playlist = this.playlistsRepository.create(args);
-        await this.playlistsRepository.savePlaylist(playlist);
-        return playlist;
+        const playlistId = await this.playlistsRepository.savePlaylist(playlist);
+        return {
+            ...playlist,
+            id: Number(playlistId)
+        };
     }
 }
