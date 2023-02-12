@@ -27,7 +27,13 @@ export class UserDoesntExistsError extends APIErrors {
 }
 
 export class UnprocessableEntityError extends APIErrors {
+    constructor(message?: string) {
+        super(422, message ?? "Unprocessable Entity!");
+    }
+}
+
+export class UnauthorizedRequestError extends APIErrors {
     constructor() {
-        super(422, "Unprocessable Entity!");
+        super(401, "Unauthorized Request!");
     }
 }
