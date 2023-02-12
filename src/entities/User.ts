@@ -1,4 +1,5 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Playlist } from "./Playlist";
 
 @Entity("users")
 export class User {
@@ -19,6 +20,9 @@ export class User {
     
     @Column({ name: "path_profile_picture", type: "varchar" })
     path_profile_picture: string;
+
+    @OneToMany(() => Playlist, playlist => playlist.creator_fk)
+    playlists: Playlist[];
 
     @CreateDateColumn({ name: "created_at" })
     created_at: Date;
