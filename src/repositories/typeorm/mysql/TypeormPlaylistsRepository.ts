@@ -13,6 +13,10 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
                 ${args.creator_fk}
             )
         `);
+            
+        const id = await this.query("SELECT LAST_INSERT_ID()");
+
+        return id[0]["LAST_INSERT_ID()"];
     },
 
     async findById(id: number) {
