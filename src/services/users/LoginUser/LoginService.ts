@@ -19,7 +19,7 @@ export class LoginService {
             throw new InvalidCredentialsError();
         }
         const token = sign({ email: user.email }, process.env.JWT_TOKEN, {
-            subject: user.email,
+            subject: String(user.id),
             expiresIn: "1d"
         });
         return token;
