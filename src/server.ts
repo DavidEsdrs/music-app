@@ -9,8 +9,8 @@ const server = express();
 
 server.use(cors());
 server.use(express.json());
-server.use(errorHandling);
 server.use(router);
+server.use(errorHandling);
 
 const SERVER_PORT = process.env.SERVER_PORT || 4343;
 
