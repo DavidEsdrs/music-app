@@ -1,9 +1,17 @@
 import { DataSource } from "typeorm"
 import dotenv from "dotenv";
-import { createUsersTable1676058796952 } from "./migrations/1676058796952-create_users_table";
 import { User } from "./entities/User";
-import { createPlaylistsTable1676100806799 } from "./migrations/1676100806799-create_playlists_table";
 import { Playlist } from "./entities/Playlist";
+import { Song } from "./entities/Song";
+import { createUsersTable1676253240773 } from "./migrations/1676253240773-create_users_table";
+import { createPlaylistsTable1676253797294 } from "./migrations/1676253797294-create_playlists_table";
+import { createSongsTable1676254244943 } from "./migrations/1676254244943-create_songs_table";
+import { createUsersPlaylistsJoinTable1676254515226 } from "./migrations/1676254515226-create_users_playlists_join_table";
+import { createPlaylistsSongsJoinTable1676255656167 } from "./migrations/1676255656167-create_playlists_songs_join_table";
+import { createSongsUsersJoinTable1676255861532 } from "./migrations/1676255861532-create_songs_users_join_table";
+import { PlaylistUser } from "./entities/PlaylistUser";
+import { SongPlaylist } from "./entities/SongPlaylist";
+import { SongUser } from "./entities/SongUser";
 
 dotenv.config({
     path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env.production"
@@ -14,11 +22,19 @@ const AppDataSource = new DataSource({
     url: process.env.DATABASE_URL,
     entities: [
         User,
-        Playlist
+        Playlist,
+        Song,
+        PlaylistUser,
+        SongPlaylist,
+        SongUser
     ],
     migrations: [
-        createUsersTable1676058796952,
-        createPlaylistsTable1676100806799
+        createUsersTable1676253240773,
+        createPlaylistsTable1676253797294,
+        createSongsTable1676254244943,
+        createUsersPlaylistsJoinTable1676254515226,
+        createPlaylistsSongsJoinTable1676255656167,
+        createSongsUsersJoinTable1676255861532
     ]
 });
 
