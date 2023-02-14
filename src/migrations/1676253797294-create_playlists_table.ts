@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm"
 
-export class createPlaylistsTable1676100806799 implements MigrationInterface {
+export class createPlaylistsTable1676253797294 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
 
@@ -11,11 +11,11 @@ export class createPlaylistsTable1676100806799 implements MigrationInterface {
                 description VARCHAR(255),
                 visibility ENUM("public", "private") NOT NULL DEFAULT "private",
                 path_featured_picture VARCHAR(200),
+                released_on YEAR(4),
                 created_at DATETIME DEFAULT NOW(),
                 updated_at DATETIME DEFAULT NOW(),
-                released_on YEAR(4),
                 creator_fk INT NOT NULL,
-                FOREIGN KEY (creator_fk) REFERENCES users(id)
+                FOREIGN KEY (creator_fk) REFERENCES users(idUser)
             )
         `);
     }
