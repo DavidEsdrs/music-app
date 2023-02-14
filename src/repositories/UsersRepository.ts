@@ -1,8 +1,7 @@
 import { User } from "../entities/User";
+import { GenericRepository } from "./GenericRepository";
 
-export interface IUsersRepository {
-    create(args: Partial<User>): User;
-    save(args: User): Promise<void>;
+export interface IUsersRepository extends GenericRepository<User> {
     findByEmail(email: string): Promise<User>;
-    findById(id: string): Promise<User>;
+    findById(id: number): Promise<User>;
 }

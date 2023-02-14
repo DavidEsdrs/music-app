@@ -7,7 +7,7 @@ export const TypeormUsersRepository = AppDataSource.getRepository(User).extend({
         return user;
     },
 
-    async findById(id: string) {
+    async findById(id: number) {
         const user = await this.query(`
             SELECT id, username, email, password, bio, path_profile_picture, created_at, updated_at
             FROM users
