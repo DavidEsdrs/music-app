@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Song } from "./Song";
 import { User } from "./User";
 
 @Entity("playlists")
@@ -18,10 +19,7 @@ export class Playlist {
     @Column({ name: "description", type: "varchar" })
     description: string;
 
-    @ManyToOne(() => User, user => user.id)
-    creator_fk: User;
-
-    @Column({ name: "released_on", type: "year", default: "now()" })
+    @Column({ name: "released_on", type: "year" })
     released_on: number;
     
     @CreateDateColumn({ name: "created_at" })
@@ -29,4 +27,7 @@ export class Playlist {
 
     @UpdateDateColumn({ name: "updated_at" })
     updated_at: Date;
+
+    @Column({ name: "creator_fk", type: "int" })
+    creator_fk: number;
 }
