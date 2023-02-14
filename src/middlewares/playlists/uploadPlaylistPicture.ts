@@ -35,7 +35,6 @@ const playlistPictureUpload = {
             if(!conditions.includes(type)) {
                 return cb(new UnprocessableEntityError("The file type is invalid!"));
             }
-
             cb(null, true);
         }
     },
@@ -47,6 +46,15 @@ const playlistPictureUpload = {
         }
     }
 
+}
+
+const validString = (s: string, c: string[]) => {
+    for(let i = 0; i < s.length; i++) {
+        if(c.includes(s[i])) {
+            return false;
+        }
+    }
+    return true;
 }
 
 export const validateAndPartPlaylistPictureUpload = multer(playlistPictureUpload.getConfig()).single("featured_picture");
