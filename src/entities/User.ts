@@ -1,9 +1,10 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Playlist } from "./Playlist";
+import { Song } from "./Song";
 
 @Entity("users")
 export class User {
-    @PrimaryGeneratedColumn({ name: "id" })
+    @PrimaryGeneratedColumn({ name: "idUser" })
     id: number;
 
     @Column({ name: "username", type: "varchar" })
@@ -20,9 +21,6 @@ export class User {
     
     @Column({ name: "path_profile_picture", type: "varchar" })
     path_profile_picture: string;
-
-    @OneToMany(() => Playlist, playlist => playlist.creator_fk)
-    playlists: Playlist[];
 
     @CreateDateColumn({ name: "created_at" })
     created_at: Date;
