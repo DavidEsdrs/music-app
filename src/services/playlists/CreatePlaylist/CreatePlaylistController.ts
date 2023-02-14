@@ -12,15 +12,12 @@ export class CreatePlaylistController {
     ) {}
 
     async handle(req: Request, res: Response) {
+        const body = req.body;
         const { user_id } = req;
-        const { 
-            title,
-            visibility,
-            path_featured_picture,
-            released_on,
-            creator_fk
-        } = req.body;
-        const playlist = await this.service.execute({ title, visibility, path_featured_picture, released_on, creator_fk: Number(user_id) });
+        const playlist = await this.service.execute({
+            ...body,
+            creator_fk: user_id
+        });
         return res.json(playlist);
     }
 }
