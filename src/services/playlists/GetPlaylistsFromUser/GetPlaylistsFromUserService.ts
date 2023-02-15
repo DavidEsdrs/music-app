@@ -1,25 +1,25 @@
 import { Playlist } from "../../../entities/Playlist";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
-import { IPlaylistUserRepository } from "../../../repositories/PlaylistUserRepository";
+import { IGetPlaylistsFromUserDTO } from "./GetPlaylistsFromUserDTO";
 
 export class GetPlaylistsFromUserService {
     constructor(
-        private playlistsRepository: IPlaylistsRepository,
-        private playlistUserRepository: IPlaylistUserRepository
+        private playlistsRepository: IPlaylistsRepository
     ) {}
 
-    async execute({ user_id, requester_id }) {
-        const playlistsUserRelation = await this.playlistUserRepository.findBy({ user_id });
-
-        const playlistsIds = playlistsUserRelation.map(p => p.playlist_id);
-
-        const playlists = await this.playlistsRepository.findManyById(playlistsIds);
+    async execute({ user_id, requester_id }: IGetPlaylistsFromUserDTO) {
+        const playlists = await this.playlistsRepository.findPlaylistsByUser(user_id);
 
         if(user_id !== requester_id) {
             return this.publicPlaylists(playlists);
         }
+
+        const playlistsAndSongs = playlists.map(playlist => ({
+            ...playlist,
+            songs_url: `${process.env.API_URL}/user/playlist/${playlist.id}`
+        }));
         
-        return playlists;
+        return playlistsAndSongs;
     }
 
     publicPlaylists(playlists: Playlist[]) {
