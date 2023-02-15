@@ -3,12 +3,10 @@ import { ICreateUserDTO } from "./CreateUserDTO";
 import { hash } from "argon2";
 import { EmailAlreadyExistsError } from "../../../api/APIErrors";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
-import { IPlaylistUserRepository } from "../../../repositories/PlaylistUserRepository";
 
 type CreateUserServiceArgs = {
     usersRepository: IUsersRepository,
-    playlistsRepository: IPlaylistsRepository,
-    playlistsUserRepository: IPlaylistUserRepository
+    playlistsRepository: IPlaylistsRepository
 }
 
 export class CreateUserService {
@@ -42,12 +40,7 @@ export class CreateUserService {
             released_on: new Date().getUTCFullYear(),
             creator_fk: user_id
         });
-        const playlist = await this.services.playlistsRepository.save(default_playlist);
-        const userPlaylistRelation = this.services.playlistsUserRepository.create({ 
-            playlist_id: playlist.id,
-            user_id: user_id 
-        });
-        await this.services.playlistsUserRepository.save(userPlaylistRelation);
-
+        await this.services.playlistsRepository.savePlaylist(default_playlist);
+        return default_playlist;
     }
 }
