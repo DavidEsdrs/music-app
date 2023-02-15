@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { Song } from "../../../entities/Song";
-import { ISongsRepository } from "../../../repositories/SongsRepository";
-import { ISongUserRepository } from "../../../repositories/SongUserRepository";
 import { ICreateSongDTO } from "./CreateSongDTO";
 
 interface ICreateSongService {
