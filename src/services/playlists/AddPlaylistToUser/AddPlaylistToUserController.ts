@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { ResponseEntity } from "../../../api/ResponseEntity";
-import { PlaylistUser } from "../../../entities/PlaylistUser";
+import { PlaylistCopy } from "../../../repositories/PlaylistsRepository";
 import { IAddPlaylistToUserDTO } from "./AddPlaylistToUserDTO";
 
 interface IAddPlaylistToUserService {
-    execute(args: IAddPlaylistToUserDTO): Promise<ResponseEntity<PlaylistUser>>;
+    execute(args: IAddPlaylistToUserDTO): Promise<ResponseEntity<PlaylistCopy>>;
 }
 
 export class AddPlaylistToUserController {
