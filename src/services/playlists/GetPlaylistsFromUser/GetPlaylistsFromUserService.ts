@@ -11,7 +11,10 @@ export class GetPlaylistsFromUserService {
         const playlists = await this.playlistsRepository.findPlaylistsByUser(user_id);
 
         if(user_id !== requester_id) {
-            return this.publicPlaylists(playlists);
+            return this.publicPlaylists(playlists).map(playlist => ({
+                ...playlist,
+                songs_url: `${process.env.API_URL}/user/playlist/${playlist.id}`
+            }));
         }
 
         const playlistsAndSongs = playlists.map(playlist => ({
