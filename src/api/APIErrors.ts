@@ -37,3 +37,9 @@ export class UnauthorizedRequestError extends APIErrors {
         super(401, "Access denied! You need to be authorized to perform this action!");
     }
 }
+
+export class PlaylistsNotFoundError extends APIErrors {
+    constructor() {
+        super(404, "Playlist not found!");
+    }
+}
