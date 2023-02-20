@@ -5,9 +5,12 @@ import { buildAddPlaylistToUser } from "./AddPlaylistToUser/buildAddPlaylistToUs
 import { buildCreatePlaylist } from "./CreatePlaylist/buildCreatePlaylist";
 import { validateCreatePlaylist } from "./CreatePlaylist/CreatePlaylist.middleware";
 import { buildDeletePlaylist } from "./DeletePlaylist/buildDeletePlaylist";
+import { buildGetPlaylist } from "./GetPlaylist/buildGetPlaylist";
 import { buildGetPlaylistsFromUser } from "./GetPlaylistsFromUser/buildGetPlaylistsFromUser";
 
 const router = Router();
+
+router.get("/playlist/:id", ensureAuthUserSoft, (req, res) => buildGetPlaylist().handle(req, res));
 
 router.get("/user/:user_id/playlist", ensureAuthUserSoft, (req, res) => buildGetPlaylistsFromUser().handle(req, res));
 
