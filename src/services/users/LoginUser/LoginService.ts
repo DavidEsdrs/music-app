@@ -14,7 +14,7 @@ export class LoginService {
         if(!user) {
             throw new InvalidCredentialsError();
         }
-        const correctCredentials = await verify(user.password, args.password);
+        const correctCredentials = await verify(user.password, args.password, { salt: Buffer.from(user.email) });
         if(!correctCredentials) {
             throw new InvalidCredentialsError();
         }
