@@ -144,5 +144,11 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
         await this.query(`
             INSERT INTO songs_playlists(playlist_id, song_id) VALUES(${playlist_id}, ${song_id})
         `);
+    },
+
+    async deletePlaylist(playlist_id: number) {
+        await this.manager.transaction(async (manager: EntityManager) => {
+            await manager.delete(Playlist, { id: playlist_id });
+        });
     }
 });
