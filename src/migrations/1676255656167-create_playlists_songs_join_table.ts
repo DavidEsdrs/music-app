@@ -9,8 +9,12 @@ export class createPlaylistsSongsJoinTable1676255656167 implements MigrationInte
                 song_id INT NOT NULL,
                 playlist_id INT NOT NULL,
                 PRIMARY KEY(song_id, playlist_id),
-                FOREIGN KEY (playlist_id) REFERENCES playlists(idPLaylist),
-                FOREIGN KEY (song_id) REFERENCES songs(idSong)
+                FOREIGN KEY (playlist_id) 
+                    REFERENCES playlists(idPLaylist)
+                    ON DELETE CASCADE,
+                FOREIGN KEY (song_id) 
+                    REFERENCES songs(idSong)
+                    ON DELETE CASCADE
             )
         `);
     }
