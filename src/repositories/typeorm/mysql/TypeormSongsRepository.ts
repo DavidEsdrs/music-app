@@ -67,4 +67,12 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
 
         return !!songs;
     },
+
+    async deleteSong(id: number) {
+        await this.query(`
+            DELETE
+            FROM songs 
+            WHERE idSong=${id}
+        `);
+    }
 });
