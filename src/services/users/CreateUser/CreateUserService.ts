@@ -3,6 +3,7 @@ import { ICreateUserDTO } from "./CreateUserDTO";
 import { hash } from "argon2";
 import { EmailAlreadyExistsError } from "../../../api/APIErrors";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
+import { fulfillUser } from "../../../utils/fulfillInfo";
 
 type CreateUserServiceArgs = {
     usersRepository: IUsersRepository,
@@ -28,7 +29,7 @@ export class CreateUserService {
         });
         const userInDb = await this.services.usersRepository.save(user);
         await this.createDefaultPlaylist(userInDb.id);
-        return user;
+        return fulfillUser(userInDb);
     }
     
     private async createDefaultPlaylist(user_id: number)
