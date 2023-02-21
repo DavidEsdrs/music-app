@@ -3,6 +3,7 @@ import { ensureAuthUser } from "../../middlewares/ensureAuthUser";
 import { validateAndParseSongFileUpload } from "../../middlewares/songs/uploadSongFile";
 import { buildAddSongToPlaylist } from "../playlists/AddSongToPlaylist/builAddSongToPlaylist";
 import { buildCreateSong } from "./CreateSong/buildCreateSong";
+import { buildDeleteSong } from "./DeleteSong/buildDeleteSong";
 import { buildDonwloadSong } from "./DownloadSong/buildDownloadSong";
 import { buildGetSongsFromPlaylist } from "./GetSongsFromPlaylist/buildGetSongsFromPlaylist";
 
@@ -17,5 +18,7 @@ router.post("/playlist/songs", validateAndParseSongFileUpload, (req, res) => bui
 router.get("/playlist/:id/song", (req, res) => buildGetSongsFromPlaylist().handle(req, res));
 
 router.get("/song/:song/donwload", (req, res) => buildDonwloadSong().handle(req, res));
+
+router.delete("/song/:id", (req, res) => buildDeleteSong().handle(req, res));
 
 export { router as songsRouter };
