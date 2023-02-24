@@ -1,8 +1,9 @@
+import fs from "fs";
+import path from "path";
 import { UnauthorizedRequestError } from "../../../api/APIErrors";
 import { ISongsRepository } from "../../../repositories/SongsRepository";
 import { IDonwloadSongDTO } from "./DownloadSongDTO";
-import fs from "fs";
-import path from "path";
+import { isPublicSong } from "../../../utils/checkPlaylist";
 
 export class DownloadSongService {
     constructor(
@@ -10,13 +11,11 @@ export class DownloadSongService {
     ) {}
     
     async execute({ user_id, song_id }: IDonwloadSongDTO) {
-        const isPublicSong = await this.songsRepository.isPublicSong(song_id);
+        const song = await this.songsRepository.joinSongPlaylistUser(song_id);
 
-        if(!isPublicSong) {
+        if(!isPublicSong(song.playlists) && !this.isRequestCreator(song.creator_fk, user_id)) {
             throw new UnauthorizedRequestError();
         }
-
-        const song = await this.songsRepository.findById(song_id);
 
         const downloadPath = path.resolve(__dirname, "..", "..", "..", "..", "uploads", "songs", song.file_path);
 
@@ -24,4 +23,6 @@ export class DownloadSongService {
 
         return readableStream;
     }
+
+    isRequestCreator = (creator_fk: number, user_id: number) => creator_fk === user_id;
 }
