@@ -9,3 +9,12 @@ export const checkPlaylist = (playlist: Playlist, requester_id: number) => {
     }
     return true;
 }
+
+export const isPublicSong = (song_playlists: Partial<Playlist>[]) => {
+    const visibilities = song_playlists.map(sp => sp.visibility);
+    const public_playlists = visibilities.filter(v => v === "public");
+    if(public_playlists.length <= 0) {
+        return false;
+    }
+    return true;
+}
