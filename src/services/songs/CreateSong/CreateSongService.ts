@@ -13,7 +13,7 @@ export class CreateSongService {
         const songSaved = await this.songsRepository.saveSong(song);
         const songWithDownload = {
             ...songSaved,
-            download_link: `${process.env.API_URL}/song/${songSaved.id}/download`
+            download_link: `${process.env.API_URL}/song/${songSaved.idSong}/download`
         };
         return songWithDownload;
     }
