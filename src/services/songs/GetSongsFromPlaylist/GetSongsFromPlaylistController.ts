@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Song } from "../../../entities/Song";
 import { IGetSongsFromPlaylistDTO } from "./GetSongsFromPlaylistDTO";
 
-type SongWithDownloadLink = Song & { download_link: string };
+export type SongWithDownloadLink = Song & { download_link: string };
 
 interface IGetSongsFromPlaylistService {
     execute(args: IGetSongsFromPlaylistDTO): Promise<SongWithDownloadLink[]>;
