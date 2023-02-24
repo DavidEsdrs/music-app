@@ -25,7 +25,7 @@ export class DeleteSongService {
         const songsPath = path.resolve(__dirname, "..", "..", "..", "..", "uploads", "songs", song.file_path);
         await removeFile(songsPath);
         await this.songsRepository.deleteSong(song_id);
-        const result = new ResponseEntity<Song>(`Song ${song.id} deleted`, 200);
+        const result = new ResponseEntity<Song>(`Song ${song.idSong} deleted`, 200);
         result.deleted = song;
         return result;
     }
