@@ -28,7 +28,7 @@ export class CreateUserService {
             password: passwordHash
         });
         const userInDb = await this.services.usersRepository.save(user);
-        await this.createDefaultPlaylist(userInDb.id);
+        await this.createDefaultPlaylist(userInDb.idUser);
         return fulfillUser(userInDb);
     }
     
