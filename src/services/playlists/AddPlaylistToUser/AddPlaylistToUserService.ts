@@ -1,10 +1,8 @@
 import { UnauthorizedRequestError } from "../../../api/APIErrors";
 import { ResponseEntity } from "../../../api/ResponseEntity";
 import { Playlist } from "../../../entities/Playlist";
-import { PlaylistUser } from "../../../entities/PlaylistUser";
-import { Song } from "../../../entities/Song";
-import { SongPlaylist } from "../../../entities/SongPlaylist";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
+import { InsertEntity } from "../../../utils/InsertEntity";
 import { IAddPlaylistToUserDTO } from "./AddPlaylistToUserDTO";
 
 export class AddPlaylistToUserService {
@@ -21,10 +19,10 @@ export class AddPlaylistToUserService {
         }
 
         /* Creates a copy from the playlist that the user want to added to his playlist list  */
-        const playlistCopy = await this.playlistRepository.copyAndSavePlaylist(playlist.id, args.user_id);
+        const playlistCopy = await this.playlistRepository.copyAndSavePlaylist(playlist.idPlaylist, args.user_id);
 
-        const response = new ResponseEntity<Playlist>(
-            `Playlist ${args.playlist_id} added to user ${args.user_id} as ${playlistCopy.id}`,
+        const response = new ResponseEntity<InsertEntity<Playlist>>(
+            `Playlist ${args.playlist_id} added to user ${args.user_id} as ${playlistCopy.insertId}`,
             200
         );
         
