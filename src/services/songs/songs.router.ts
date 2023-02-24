@@ -1,24 +1,29 @@
-import { Router } from "express";
+import { query, Router } from "express";
 import { ensureAuthUser } from "../../middlewares/ensureAuthUser";
+import { ensureAuthUserSoft } from "../../middlewares/ensureAuthUserSoft";
 import { validateAndParseSongFileUpload } from "../../middlewares/songs/uploadSongFile";
 import { buildAddSongToPlaylist } from "../playlists/AddSongToPlaylist/builAddSongToPlaylist";
 import { buildCreateSong } from "./CreateSong/buildCreateSong";
 import { buildDeleteSong } from "./DeleteSong/buildDeleteSong";
 import { buildDonwloadSong } from "./DownloadSong/buildDownloadSong";
+import { buildGetSong } from "./GetSong/buildGetSong";
 import { buildGetSongsFromPlaylist } from "./GetSongsFromPlaylist/buildGetSongsFromPlaylist";
+import { getSongsFromPlaylistQuerySchema } from "./GetSongsFromPlaylist/getSongsFromPlaylist.middleware";
+import { validateQuery } from "../../utils/validations";
+import { getSongSchema } from "./GetSong/getSong.middleware";
 
 const router = Router();
 
-router.use(ensureAuthUser);
+router.post("/playlist/:playlist/song/:song", ensureAuthUser, (req, res) => buildAddSongToPlaylist().handle(req, res));
 
-router.post("/playlist/:playlist/song/:song", (req, res) => buildAddSongToPlaylist().handle(req, res));
+router.post("/playlist/songs", ensureAuthUser, validateAndParseSongFileUpload, (req, res) => buildCreateSong().handle(req, res));
 
-router.post("/playlist/songs", validateAndParseSongFileUpload, (req, res) => buildCreateSong().handle(req, res));
+router.get("/playlist/:id/song", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getSongsFromPlaylistQuerySchema), (req, res) => buildGetSongsFromPlaylist().handle(req, res));
 
-router.get("/playlist/:id/song", (req, res) => buildGetSongsFromPlaylist().handle(req, res));
+router.get("/song/:song/donwload", ensureAuthUser, (req, res) => buildDonwloadSong().handle(req, res));
 
-router.get("/song/:song/donwload", (req, res) => buildDonwloadSong().handle(req, res));
+router.get("/song/:id", ensureAuthUser, query({ plainObjects: true }), validateQuery(getSongSchema), (req, res) => buildGetSong().handle(req, res));
 
-router.delete("/song/:id", (req, res) => buildDeleteSong().handle(req, res));
+router.delete("/song/:id", ensureAuthUser, (req, res) => buildDeleteSong().handle(req, res));
 
 export { router as songsRouter };
