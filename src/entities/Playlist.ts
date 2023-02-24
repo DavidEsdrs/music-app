@@ -5,7 +5,7 @@ import { User } from "./User";
 @Entity("playlists")
 export class Playlist {
     @PrimaryGeneratedColumn({ name: "idPlaylist" })
-    id: number;
+    idPlaylist: number;
 
     @Column({ name: "title", type: "varchar" })
     title: string;
