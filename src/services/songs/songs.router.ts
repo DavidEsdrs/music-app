@@ -20,7 +20,7 @@ router.post("/playlist/songs", ensureAuthUser, validateAndParseSongFileUpload, (
 
 router.get("/playlist/:id/song", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getSongsFromPlaylistQuerySchema), (req, res) => buildGetSongsFromPlaylist().handle(req, res));
 
-router.get("/song/:song/donwload", ensureAuthUser, (req, res) => buildDonwloadSong().handle(req, res));
+router.get("/song/:id/stream", ensureAuthUser, (req, res) => buildDonwloadSong().handle(req, res));
 
 router.get("/song/:id", ensureAuthUser, query({ plainObjects: true }), validateQuery(getSongSchema), (req, res) => buildGetSong().handle(req, res));
 
