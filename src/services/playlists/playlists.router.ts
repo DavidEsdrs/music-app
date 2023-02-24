@@ -8,6 +8,7 @@ import { validateCreatePlaylist } from "./CreatePlaylist/CreatePlaylist.middlewa
 import { buildDeletePlaylist } from "./DeletePlaylist/buildDeletePlaylist";
 import { buildGetPlaylist } from "./GetPlaylist/buildGetPlaylist";
 import { getPlaylistSchema } from "./GetPlaylist/getPlaylist.middleware";
+import { buildGetPlaylists } from "./GetPlaylists/buildGetPlaylists";
 import { buildGetPlaylistsFromUser } from "./GetPlaylistsFromUser/buildGetPlaylistsFromUser";
 
 const router = Router();
@@ -15,6 +16,8 @@ const router = Router();
 router.get("/playlist/:id", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getPlaylistSchema), (req, res) => buildGetPlaylist().handle(req, res));
 
 router.get("/user/:user_id/playlist", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getPlaylistSchema), (req, res) => buildGetPlaylistsFromUser().handle(req, res));
+
+router.get("/playlist", query({ plainObjects: true }), (req, res) => buildGetPlaylists().handle(req, res));
 
 router.post("/playlist", ensureAuthUser, validateCreatePlaylist, (req, res) => buildCreatePlaylist().handle(req, res));
 
