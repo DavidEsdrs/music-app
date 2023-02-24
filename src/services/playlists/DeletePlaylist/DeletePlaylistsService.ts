@@ -18,7 +18,7 @@ export class DeletePlaylistService {
         if(playlist.title === "UPDATED_SONGS") {
             throw new Error("Can't delete default playlist!");
         }
-        await this.playlistsRepository.deletePlaylist(playlist.id);
+        await this.playlistsRepository.deletePlaylist(playlist.idPlaylist);
         const result = new ResponseEntity<Playlist>("Successfully deleted", 200);
         result.deleted = playlist;
         return result;
