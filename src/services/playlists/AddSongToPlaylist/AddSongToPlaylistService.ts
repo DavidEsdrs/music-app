@@ -3,6 +3,7 @@ import { ResponseEntity } from "../../../api/ResponseEntity";
 import { SongPlaylist } from "../../../entities/SongPlaylist";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
 import { ISongsRepository } from "../../../repositories/SongsRepository";
+import { isPublicSong } from "../../../utils/checkPlaylist";
 import { IAddSongToPlaylistDTO } from "./AddSongToPlaylistDTO";
 
 export class AddSongToPlaylistService {
@@ -25,13 +26,13 @@ export class AddSongToPlaylistService {
             return result;
         }
 
-        const isPublicSong = await this.songsRepository.isPublicSong(song_id);
+        const song = await this.songsRepository.joinSongPlaylistUser(song_id);
 
-        if(!isPublicSong) {
+        if(!isPublicSong(song.playlists)) {
             throw new UnauthorizedRequestError();
         }
 
-        await this.playlistsRepository.addSongToPlaylist(playlist_id, song_id);
+        await this.playlistsRepository.addSongToPlaylist(playlist_id, song.idSong);
 
         result = new ResponseEntity<SongPlaylist>("Song successfully added to playlist", 200);
 
