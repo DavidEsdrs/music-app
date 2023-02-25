@@ -166,5 +166,19 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
         await this.manager.transaction(async (manager: EntityManager) => {
             await manager.delete(Playlist, { id: playlist_id });
         });
+    },
+
+    async findFamousPlaylists(limit: number) {
+        const playlists = await this.query(`
+            SELECT idPlaylist, title, visibility, creator_fk, created_at, updated_at
+            FROM playlists
+            WHERE playlists.visibility="public"
+            ORDER BY RAND()
+            LIMIT ${limit ?? 10}
+        `);
+
+        console.log({playlists})
+
+        return playlists;
     }
 });

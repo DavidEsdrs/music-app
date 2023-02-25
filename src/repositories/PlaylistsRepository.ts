@@ -17,4 +17,5 @@ export interface IPlaylistsRepository extends GenericRepository<Playlist> {
     savePlaylist(playlist: PartialPlaylist): Promise<Playlist>;
     findPlaylistsByUser(user_id: number): Promise<Playlist[]>;
     deletePlaylist(playlist_id: number): Promise<any>;
+    findFamousPlaylists(limit: number): Promise<Playlist[]>;
 }
