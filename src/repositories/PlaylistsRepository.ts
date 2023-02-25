@@ -1,3 +1,4 @@
+import { ResponseEntity } from "../api/ResponseEntity";
 import { Playlist } from "../entities/Playlist";
 import { Song } from "../entities/Song";
 import { SongPlaylist } from "../entities/SongPlaylist";
@@ -18,4 +19,5 @@ export interface IPlaylistsRepository extends GenericRepository<Playlist> {
     findPlaylistsByUser(user_id: number): Promise<Playlist[]>;
     deletePlaylist(playlist_id: number): Promise<any>;
     findFamousPlaylists(limit: number): Promise<Playlist[]>;
+    removeSongFromPlaylist(song_id: number, playlist_id: number): Promise<ResponseEntity<Playlist>>;
 }

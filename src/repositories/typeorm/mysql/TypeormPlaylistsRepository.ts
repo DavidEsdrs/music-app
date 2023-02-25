@@ -60,7 +60,7 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
                         "${playlist.title}",
                         ${playlist.description ? `"${playlist.description}"` : "NULL"},
                         ${playlist.visibility ? `"${playlist.visibility}"` : "private"},
-                        ${playlist.released_on ? playlist.released_on : new Date().getUTCFullYear},
+                        ${playlist.released_on ?? new Date().getUTCFullYear},
                         ${playlist.path_featured_picture ? `"${playlist.path_featured_picture}"` : "NULL" },
                         ${playlist.creator_fk}
                     )
@@ -177,8 +177,14 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
             LIMIT ${limit ?? 10}
         `);
 
-        console.log({playlists})
-
         return playlists;
+    },
+
+    async removeSongFromPlaylist(song_id: number, playlist_id: number) {
+        await this.query(`
+            DELETE 
+            FROM songs_playlists
+            WHERE songs_playlists.song_id=${song_id} AND songs_playlists.playlist_id=${playlist_id}
+        `);
     }
 });
