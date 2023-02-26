@@ -14,28 +14,22 @@ export class AddSongToPlaylistService {
 
     async execute({ user_id, song_id, playlist_id }: IAddSongToPlaylistDTO) {
         const playlist = await this.playlistsRepository.findById(playlist_id);
+
         if(playlist.creator_fk !== user_id) {
+            console.log("Invalid playlist!");
             throw new UnauthorizedRequestError();
         }
-
-        let result: ResponseEntity<SongPlaylist>;
         
-        if(playlist.creator_fk === user_id) {
-            await this.playlistsRepository.addSongToPlaylist(playlist_id, song_id);
-            result = new ResponseEntity<SongPlaylist>("Song successfully added to playlist", 200);
-            return result;
-        }
-
         const song = await this.songsRepository.joinSongPlaylistUser(song_id);
-
-        if(!isPublicSong(song.playlists)) {
+        
+        if(!this.isRequesterCreator(song.creator_fk, user_id)  && !isPublicSong(song.playlists)) {
             throw new UnauthorizedRequestError();
         }
-
-        await this.playlistsRepository.addSongToPlaylist(playlist_id, song.idSong);
-
-        result = new ResponseEntity<SongPlaylist>("Song successfully added to playlist", 200);
-
+        
+        await this.playlistsRepository.addSongToPlaylist(playlist_id, song_id);
+        const result = new ResponseEntity<SongPlaylist>("Song successfully added to playlist", 200);
         return result;
     }
+
+    isRequesterCreator = (creator_fk: number, requester_id: number) => creator_fk === requester_id;
 }
