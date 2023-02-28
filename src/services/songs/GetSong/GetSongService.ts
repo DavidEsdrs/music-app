@@ -19,8 +19,6 @@ export class GetSongService {
         if(!this.isRequesterCreator(song.creator_fk, user_id) && !isPublicSong(song.playlists)) {
             throw new UnauthorizedRequestError();
         }
-        const path = this.fileHandling.getPath(song.file_path);
-        const duration = await this.fileHandling.getSongDuration(path);
         const playlists = this.getPlaylists(this.isRequesterCreator(song.creator_fk, user_id), song);
         const song_info = { ...song, playlists };
         return fulfillSong(song_info as Song, this.fileHandling);
