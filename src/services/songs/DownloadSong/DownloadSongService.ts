@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { UnauthorizedRequestError } from "../../../api/APIErrors";
+import { SongNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
 import { ISongsRepository } from "../../../repositories/SongsRepository";
 import { IDonwloadSongDTO } from "./DownloadSongDTO";
 import { isPublicSong } from "../../../utils/checkPlaylist";
@@ -11,10 +11,10 @@ export class DownloadSongService {
     ) {}
     
     async execute({ user_id, song_id }: IDonwloadSongDTO) {
-        const song = await this.songsRepository.joinSongPlaylistUser(song_id);
+        const song = await this.songsRepository.joinSongPublicPlaylists(song_id);
 
         if(!isPublicSong(song.playlists) && !this.isRequestCreator(song.creator_fk, user_id)) {
-            throw new UnauthorizedRequestError();
+            throw new SongNotFoundError();
         }
 
         const downloadPath = path.resolve(__dirname, "..", "..", "..", "..", "uploads", "songs", song.file_path);
