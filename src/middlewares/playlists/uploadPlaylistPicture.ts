@@ -21,7 +21,7 @@ const playlistPictureUpload = {
 
             filename: (req, file, cb) => {
                 const file_type = mime.getExtension(file.mimetype);
-                const file_name = `${new Date().getTime()}-${file.originalname.replace(" ", "-")}`;
+                const file_name = `${new Date().getTime()}.${file.originalname.split('.').pop()}`;
                 req.file_props = { file_type, file_name };
                 cb(null, file_name);
             }
@@ -48,13 +48,4 @@ const playlistPictureUpload = {
 
 }
 
-const validString = (s: string, c: string[]) => {
-    for(let i = 0; i < s.length; i++) {
-        if(c.includes(s[i])) {
-            return false;
-        }
-    }
-    return true;
-}
-
-export const validateAndPartPlaylistPictureUpload = multer(playlistPictureUpload.getConfig()).single("featured_picture");
+export const validateAndParsePlaylistPictureUpload = multer(playlistPictureUpload.getConfig()).single("featured_picture");
