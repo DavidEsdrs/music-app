@@ -43,3 +43,15 @@ export class PlaylistsNotFoundError extends APIErrors {
         super(404, "Playlist not found!");
     }
 }
+
+export class SongNotFoundError extends APIErrors {
+    constructor() {
+        super(404, "Song not found!");
+    }
+}
+
+export class DuplicateSongEntryError extends APIErrors {
+    constructor() {
+        super(409, "The song is already in the playlist!");
+    }
+}
