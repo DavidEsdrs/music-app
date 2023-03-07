@@ -21,6 +21,6 @@ export const ensureAuthUserSoft = (req: Request, res: Response, next: NextFuncti
         return next();
     }
     catch(error) {
-        throw new UnauthorizedRequestError();
+        return next();
     }
 }
