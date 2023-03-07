@@ -15,7 +15,7 @@ export class GetSongService {
     ) {}
 
     async execute({ song_id, user_id }: IGetSongDTO) {
-        const song = await this.songsRepository.joinSongPlaylistUser(song_id);
+        const song = await this.songsRepository.joinSongPublicPlaylists(song_id);
         if(!this.isRequesterCreator(song.creator_fk, user_id) && !isPublicSong(song.playlists)) {
             throw new UnauthorizedRequestError();
         }
