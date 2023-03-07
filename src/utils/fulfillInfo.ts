@@ -21,7 +21,7 @@ export const fulfillSong = async (song: Song, fileHandling: FileHandling) => {
 
     return {
         ...song, 
-        download_link: `${process.env.API_URL}/song/${song.idSong}/download`, 
+        download_link: `${process.env.API_URL}/song/${song.idSong}/stream`, 
         duration 
     } as SongWithDownloadLink
 };
