@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
+import { User } from "../../../entities/User";
 import { IUsersRepository } from "../../../repositories/UsersRepository";
 import { ILoginUserDTO } from "./LoginUserDTO";
 
 interface ILoginUserService {
-    execute(args: ILoginUserDTO): Promise<string>;
+    execute(args: ILoginUserDTO): Promise<User & { token: string }>;
 }
 
 export class LoginUserController {
