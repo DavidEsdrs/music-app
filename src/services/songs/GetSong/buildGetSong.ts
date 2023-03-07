@@ -4,7 +4,8 @@ import { GetSongController } from "./GetSongController";
 import { GetSongService } from "./GetSongService"
 
 export const buildGetSong = () => {
-    const service = new GetSongService(songsRepository, new FFmpegFileHandling());
+    const ffmpegFileHandler = new FFmpegFileHandling();
+    const service = new GetSongService(songsRepository, ffmpegFileHandler);
     const controller = new GetSongController(service);
     return controller;
 }
