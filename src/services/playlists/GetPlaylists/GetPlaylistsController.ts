@@ -13,7 +13,7 @@ export class GetPlaylistsController {
 
     async handle(req: Request, res: Response) {
         const limit = Number(req.query.limit);
-        const playlists = await this.service.execute({ limit: 10 });
+        const playlists = await this.service.execute({ limit });
         return res.json(playlists);
     }
 }
