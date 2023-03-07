@@ -1,5 +1,6 @@
 import { verify } from "argon2";
 import { sign } from "jsonwebtoken";
+import { instanceToPlain } from "class-transformer";
 import { InvalidCredentialsError } from "../../../api/APIErrors";
 import { IUsersRepository } from "../../../repositories/UsersRepository";
 import { ILoginUserDTO } from "./LoginUserDTO";
@@ -22,6 +23,9 @@ export class LoginService {
             subject: String(user.idUser),
             expiresIn: "1d"
         });
-        return token;
+        return {
+            ...instanceToPlain(user),
+            token
+        };
     }
 }
