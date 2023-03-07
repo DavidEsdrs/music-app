@@ -1,3 +1,4 @@
+import { Exclude } from "class-transformer";
 import { BeforeInsert, Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Playlist } from "./Playlist";
 import { Song } from "./Song";
@@ -13,6 +14,7 @@ export class User {
     @Column({ name: "email", type: "varchar" })
     email: string;
 
+    @Exclude()
     @Column({ name: "password", type: "varchar" })
     password: string;
 
