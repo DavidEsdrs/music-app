@@ -55,3 +55,9 @@ export class DuplicateSongEntryError extends APIErrors {
         super(409, "The song is already in the playlist!");
     }
 }
+
+export class DefaultPlaylistDeleteError extends APIErrors {
+    constructor() {
+        super(422, "Can't delete default playlist!");
+    }
+}
