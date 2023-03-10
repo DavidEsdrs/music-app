@@ -15,7 +15,9 @@ export class createPlaylistsTable1676253797294 implements MigrationInterface {
                 created_at DATETIME DEFAULT NOW(),
                 updated_at DATETIME DEFAULT NOW(),
                 creator_fk INT NOT NULL,
-                FOREIGN KEY (creator_fk) REFERENCES users(idUser)
+                FOREIGN KEY (creator_fk) 
+                    REFERENCES users(idUser)
+                    ON DELETE CASCADE
             )
         `);
     }
