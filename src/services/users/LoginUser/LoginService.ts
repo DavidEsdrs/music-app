@@ -4,6 +4,7 @@ import { instanceToPlain } from "class-transformer";
 import { InvalidCredentialsError } from "../../../api/APIErrors";
 import { IUsersRepository } from "../../../repositories/UsersRepository";
 import { ILoginUserDTO } from "./LoginUserDTO";
+import { User } from "../../../entities/User";
 
 export class LoginService {
     constructor(
@@ -19,13 +20,10 @@ export class LoginService {
         if(!correctCredentials) {
             throw new InvalidCredentialsError();
         }
-        const token = sign({ email: user.email }, process.env.JWT_TOKEN, {
-            subject: String(user.idUser),
-            expiresIn: "1d"
-        });
+        const token = sign({ email: user.email }, process.env.ACCESS_TOKEN_SECRET, { subject: String(user.idUser), expiresIn: process.env.ACCESS_TOKEN_LIFESPAN });
         return {
             ...instanceToPlain(user),
             token
-        };
+        } as User & { token: string };
     }
 }
