@@ -38,6 +38,12 @@ export class UnauthorizedRequestError extends APIErrors {
     }
 }
 
+export class ForbiddenRequestError extends APIErrors {
+    constructor() {
+        super(403, "Access forbidden! Invalid credentials!");
+    }
+}
+
 export class PlaylistsNotFoundError extends APIErrors {
     constructor() {
         super(404, "Playlist not found!");
