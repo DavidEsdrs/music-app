@@ -106,6 +106,18 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
         return song_join;
     },
 
+    async isPublicSong(song_id: number) {
+        const song = await this.query(`
+            SELECT COUNT(*) AS count
+            FROM songs
+            INNER JOIN songs_playlists AS sp ON songs.idSong=sp.song_id
+            INNER JOIN playlists AS p ON p.idPlaylist=sp.playlist_id
+            WHERE songs.idSong=${song_id} AND p.visibility = "public";
+        `);
+
+        return Number(song[0].count) > 0;
+    },
+
     async deleteSong(id: number) {
         await this.query(`
             DELETE
