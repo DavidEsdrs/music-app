@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { SongNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
+import { ForbiddenRequestError, SongNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
 import { ISongsRepository } from "../../../repositories/SongsRepository";
 import { IDonwloadSongDTO } from "./DownloadSongDTO";
 import { isPublicSong } from "../../../utils/checkPlaylist";
@@ -14,7 +14,7 @@ export class DownloadSongService {
         const song = await this.songsRepository.joinSongPublicPlaylists(song_id);
 
         if(!isPublicSong(song.playlists) && !this.isRequestCreator(song.creator_fk, user_id)) {
-            throw new SongNotFoundError();
+            throw new ForbiddenRequestError();
         }
 
         const downloadPath = path.resolve(__dirname, "..", "..", "..", "..", "uploads", "songs", song.file_path);
