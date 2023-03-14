@@ -168,7 +168,7 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
 
     async deletePlaylist(playlist_id: number) {
         await this.manager.transaction(async (manager: EntityManager) => {
-            await manager.delete(Playlist, { id: playlist_id });
+            await manager.delete(Playlist, { idPlaylist: playlist_id });
         });
     },
 
