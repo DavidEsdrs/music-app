@@ -132,7 +132,7 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
 
     async findPlaylistsByUser(user_id: number) {
         const playlists = await this.query(`
-            SELECT idPlaylist, users.idUser, title, path_featured_picture, visibility, description, released_on, playlists.created_at, playlists.updated_at, creator_fk
+            SELECT idPlaylist, users.idUser, title, path_featured_picture, visibility, description, released_on, playlists.created_at, playlists.updated_at, creator_fk, users.username
             FROM users
             INNER JOIN playlists_users AS pu ON idUser=pu.user_id
             INNER JOIN playlists ON pu.playlist_id=playlists.idPlaylist
