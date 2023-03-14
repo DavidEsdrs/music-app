@@ -82,6 +82,30 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
         return song_join;
     },
 
+    async joinSongPublicPlaylists(song_id: number) {
+        const song = await this.query(`
+            SELECT s.idSong idSong, s.title song_title, s.file_path, s.creator_fk creator_fk, p.idPlaylist, p.visibility, p.title playlist_title, p.creator_fk playlist_creator_fk, p.created_at playlist_created_at
+            FROM songs s
+            INNER JOIN songs_playlists sp ON s.idSong=sp.song_id
+            INNER JOIN playlists p ON sp.playlist_id=p.idPlaylist
+            WHERE s.idSong=${song_id} AND p.creator_fk=s.creator_fk;
+        `);
+
+        if(song.length <= 0) {
+            throw new SongNotFoundError();
+        }
+
+        const song_join: SongJoin = {
+            idSong: song[0].idSong,
+            creator_fk: song[0].creator_fk,
+            title: song[0].song_title,
+            file_path: song[0].file_path,
+            playlists: song.map((s: any) => ({ idPlaylist: s.idPlaylist, title: s.playlist_title, visibility: s.visibility, creator_fk: s.playlist_creator_fk, created_at: s.playlist_created_at  }))
+        };
+
+        return song_join;
+    },
+
     async deleteSong(id: number) {
         await this.query(`
             DELETE
