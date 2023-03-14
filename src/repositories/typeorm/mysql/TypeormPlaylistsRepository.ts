@@ -1,5 +1,5 @@
 import { EntityManager, Repository } from "typeorm";
-import { APIErrors } from "../../../api/APIErrors";
+import { APIErrors, DuplicateSongEntryError } from "../../../api/APIErrors";
 import { Playlist } from "../../../entities/Playlist";
 import { PlaylistUser } from "../../../entities/PlaylistUser";
 import { SongPlaylist } from "../../../entities/SongPlaylist";
@@ -28,7 +28,9 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
 
     async findManyById(ids: number[]) {
         const idsInObj = ids.map(id => ({ id }));
-        const playlists = await this.find({ where: idsInObj });
+        const playlists = await this.find({ 
+            where: ids.map(id => ({ idPlaylist: id }))
+        });
         return playlists;
     },
 
