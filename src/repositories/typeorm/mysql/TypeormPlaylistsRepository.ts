@@ -3,7 +3,12 @@ import { APIErrors, DuplicateSongEntryError } from "../../../api/APIErrors";
 import { Playlist } from "../../../entities/Playlist";
 import { PlaylistUser } from "../../../entities/PlaylistUser";
 import { SongPlaylist } from "../../../entities/SongPlaylist";
+import { unlink } from "fs";
+import path from "path";
+import { promisify } from "util";
 import AppDataSource from "../../../ormconfig";
+
+const removeFile = promisify(unlink);
 
 export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).extend({
     async saveMany(rels: SongPlaylist[]) {
@@ -191,5 +196,13 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
             FROM songs_playlists
             WHERE songs_playlists.song_id=${song_id} AND songs_playlists.playlist_id=${playlist_id}
         `);
+    },
+
+    async updatePlaylist(playlist: Playlist, partial_playlist: Partial<Playlist>) {
+        if(playlist.path_featured_picture && partial_playlist.path_featured_picture) {
+            const file_path = path.resolve(__dirname, "..", "..", "..", "..", "uploads", "playlists", playlist.path_featured_picture);
+            await removeFile(file_path);
+        }
+        await this.update({ idPlaylist: playlist.idPlaylist }, { ...partial_playlist });
     }
 });
