@@ -32,14 +32,8 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
                     VALUES(NULL, "${song_partial.title}", "${song_partial.file_path}", ${song_partial.creator_fk})
                 `);
 
-                const song = (await manager.query(`
-                    SELECT idSong, songs.title
-                    FROM songs 
-                    WHERE idSong=${songInDb.insertId}
-                `))[0];
-
                 await manager.query(`
-                    INSERT INTO songs_users(user_id, song_id) VALUES (${song_partial.creator_fk}, ${song.idSong})
+                    INSERT INTO songs_users(user_id, song_id) VALUES (${song_partial.creator_fk}, ${songInDb.insertId})
                 `);
 
                 const default_playlist = (await manager.query(`
@@ -49,10 +43,10 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
                 `))[0];
 
                 await manager.query(`
-                    INSERT INTO songs_playlists(playlist_id, song_id) VALUES(${default_playlist.idPlaylist}, ${song.idSong})
+                    INSERT INTO songs_playlists(playlist_id, song_id) VALUES(${default_playlist.idPlaylist}, ${songInDb.insertId})
                 `);
 
-                return song;
+                return songInDb.insertId;
             }
 
             catch(err) {
