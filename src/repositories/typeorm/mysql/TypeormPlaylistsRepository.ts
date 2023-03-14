@@ -144,17 +144,25 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
 
     async addSongToPlaylist(playlist_id: number, song_id: number) {
         await this.manager.transaction(async (manager: EntityManager) => {
-            const spInsert = manager.query(`
-                INSERT INTO songs_playlists(playlist_id, song_id) VALUES(${playlist_id}, ${song_id})
-            `);
+            try {
+                const spInsert = manager.query(`
+                    INSERT INTO songs_playlists(playlist_id, song_id) VALUES(${playlist_id}, ${song_id})
+                `);
+    
+                const playlistsUpdate = manager.query(`
+                    UPDATE playlists
+                    SET updated_at=NOW()
+                    WHERE idPlaylist=${playlist_id}
+                `);
+    
+                await Promise.all([ spInsert, playlistsUpdate ]);
+            }
 
-            const playlistsUpdate = manager.query(`
-                UPDATE playlists
-                SET updated_at=NOW()
-                WHERE idPlaylist=${playlist_id}
-            `);
-
-            await Promise.all([ spInsert, playlistsUpdate ]);
+            catch(err) {
+                if(err.code === "ER_DUP_ENTRY") {
+                    throw new DuplicateSongEntryError();
+                }
+            }
         });
     },
 
