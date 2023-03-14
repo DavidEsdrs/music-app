@@ -174,11 +174,12 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
 
     async findFamousPlaylists(limit: number) {
         const playlists = await this.query(`
-            SELECT idPlaylist, title, visibility, creator_fk, created_at, updated_at
-            FROM playlists
-            WHERE playlists.visibility="public"
+            SELECT p.idPlaylist, p.title, p.visibility, p.released_on, p.creator_fk, p.created_at, p.updated_at, u.username
+            FROM playlists p
+            INNER JOIN users u ON p.creator_fk=u.idUser
+            WHERE p.visibility="public"
             ORDER BY RAND()
-            LIMIT ${limit ?? 10}
+            LIMIT ${limit && !isNaN(limit) ? limit : 5}
         `);
 
         return playlists;
