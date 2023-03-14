@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { verify } from "jsonwebtoken";
-import { UnauthorizedRequestError } from "../api/APIErrors";
+import { ForbiddenRequestError, UnauthorizedRequestError } from "../api/APIErrors";
 
 interface IPayload {
     sub: string;
@@ -16,11 +16,11 @@ export const ensureAuthUser = (req: Request, res: Response, next: NextFunction) 
         throw new UnauthorizedRequestError();
     }
     try {
-        const { sub } = verify(token, process.env.JWT_TOKEN) as IPayload;
+        const { sub } = verify(token, process.env.ACCESS_TOKEN_SECRET, { ignoreExpiration: false }) as IPayload;
         req.user_id = Number(sub);
         return next();
     }
     catch(error) {
-        throw new UnauthorizedRequestError();
+        throw new ForbiddenRequestError();
     }
 }
