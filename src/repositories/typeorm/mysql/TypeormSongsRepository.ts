@@ -1,5 +1,5 @@
 import { EntityManager } from "typeorm";
-import { APIErrors, UnauthorizedRequestError } from "../../../api/APIErrors";
+import { APIErrors, SongNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
 import { Playlist } from "../../../entities/Playlist";
 import { Song } from "../../../entities/Song";
 import AppDataSource from "../../../ormconfig";
@@ -7,7 +7,13 @@ import { SongJoin } from "../../SongsRepository";
 
 export const songsRepository = AppDataSource.getRepository(Song).extend({
     async findById(idSong: number) {
-        const song = await this.findOneBy({ idSong });
+        const song = await this.query(`
+            SELECT s.idSong, s.title song_title, s.file_path file_path, u.idUser, u.username
+            FROM songs s
+            INNER JOIN songs_users su ON s.idSong=su.song_id
+            INNER JOIN users u ON su.user_id=u.idUser
+            WHERE s.idSong=:idSong
+        `, [idSong]);
         return song;
     },
 
