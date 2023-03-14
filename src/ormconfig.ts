@@ -12,6 +12,8 @@ import { createSongsUsersJoinTable1676255861532 } from "./migrations/16762558615
 import { PlaylistUser } from "./entities/PlaylistUser";
 import { SongPlaylist } from "./entities/SongPlaylist";
 import { SongUser } from "./entities/SongUser";
+import { createRefreshTokenTable1678476984531 } from "./migrations/1678476984531-create_refresh_token_table";
+import { RefreshToken } from "./entities/RefreshToken";
 
 dotenv.config({
     path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env.production"
@@ -26,7 +28,8 @@ const AppDataSource = new DataSource({
         Song,
         PlaylistUser,
         SongPlaylist,
-        SongUser
+        SongUser,
+        RefreshToken
     ],
     migrations: [
         createUsersTable1676253240773,
@@ -34,7 +37,8 @@ const AppDataSource = new DataSource({
         createSongsTable1676254244943,
         createUsersPlaylistsJoinTable1676254515226,
         createPlaylistsSongsJoinTable1676255656167,
-        createSongsUsersJoinTable1676255861532
+        createSongsUsersJoinTable1676255861532,
+        createRefreshTokenTable1678476984531
     ]
 });
 
