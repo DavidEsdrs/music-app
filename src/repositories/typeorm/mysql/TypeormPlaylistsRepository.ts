@@ -61,24 +61,18 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
                     INSERT INTO playlists(title, description, visibility, released_on, path_featured_picture, creator_fk) VALUES(
                         "${playlist.title}",
                         ${playlist.description ? `"${playlist.description}"` : "NULL"},
-                        ${playlist.visibility ? `"${playlist.visibility}"` : "private"},
+                        ${playlist.visibility ? `"${playlist.visibility}"` : `"private"`},
                         ${playlist.released_on ?? new Date().getUTCFullYear},
                         ${playlist.path_featured_picture ? `"${playlist.path_featured_picture}"` : "NULL" },
                         ${playlist.creator_fk}
                     )
                 `);
-        
+
                 await manager.query(`
                     INSERT INTO playlists_users(playlist_id, user_id) VALUES (${playlistInDb.insertId}, ${playlist.creator_fk})
                 `);
 
-                const insertedPlaylist = (await manager.query(`
-                    SELECT idPlaylist AS id, title, description, released_on, path_featured_picture, creator_fk, created_at, updated_at
-                    FROM playlists
-                    WHERE idPlaylist=${playlistInDb.insertId}
-                `))[0];
-                
-                return insertedPlaylist;
+                return playlistInDb.insertId;
             }
 
             catch(err) {
