@@ -16,7 +16,7 @@ export const ensureAuthUserSoft = (req: Request, res: Response, next: NextFuncti
         throw new UnauthorizedRequestError();
     }
     try {
-        const { sub } = verify(token, process.env.JWT_TOKEN) as IPayload;
+        const { sub } = verify(token, process.env.ACCESS_TOKEN_SECRET) as IPayload;
         req.user_id = Number(sub);
         return next();
     }
