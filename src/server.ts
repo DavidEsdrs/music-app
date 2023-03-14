@@ -2,6 +2,7 @@ import "reflect-metadata";
 import "express-async-errors";
 import express from "express";
 import fs from "fs";
+import path from "path";
 import router from "./router";
 import cors from "cors";
 import https from "https";
@@ -33,7 +34,7 @@ const SERVER_PORT = process.env.SERVER_PORT || 4343;
 
 https.
     createServer({
-        key: fs.readFileSync("localhost-key.pem"),
-        cert: fs.readFileSync("localhost.pem")
+        key: fs.readFileSync(path.resolve(__dirname, "..", "ssl", process.env.SSL_CERT_KEY)),
+        cert: fs.readFileSync(path.resolve(__dirname, "..", "ssl", process.env.SSL_CERT))
     }, server).
     listen(SERVER_PORT, () => console.log(`running at ${SERVER_PORT}`));
