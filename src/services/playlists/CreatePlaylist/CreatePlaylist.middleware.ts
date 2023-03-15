@@ -10,6 +10,7 @@ const playlistSchema = Joi.object({
     
     description: Joi.string().
         max(255).
+        default(value => value || null).
         optional(),
     
     visibility: Joi.string().
@@ -18,10 +19,9 @@ const playlistSchema = Joi.object({
     
     released_on: Joi.number().
         min(1500).
-        max(new Date().getUTCFullYear()).
         optional(),
 
-    path_featured_picture: Joi.string().
+    featured_picture: Joi.any().
         optional()
 });
 
