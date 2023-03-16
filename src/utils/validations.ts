@@ -17,7 +17,7 @@ export const validateBody = (schema: Joi.ObjectSchema, err?: APIErrors): Express
     return (req, res, next) => {
         const { error } = schema.validate(req.body);
         if(error) {
-            throw err ?? new UnprocessableEntityError();
+            throw new UnprocessableEntityError(error.message);
         }
         return next();
     };
