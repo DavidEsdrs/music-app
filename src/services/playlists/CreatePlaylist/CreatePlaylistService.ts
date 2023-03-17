@@ -12,15 +12,18 @@ export class CreatePlaylistService {
     async execute({ title, description, creator_fk, path_featured_picture, released_on, tags, visibility }: ICreatePlaylistDTO) {
         const playlist = this.playlistsRepository.create({ title, description, creator_fk, path_featured_picture, released_on, visibility });
         const createdPlaylistId = await this.playlistsRepository.savePlaylist(playlist);
-        const promisses = tags.map(tag => {
-            const tagObj = this.tagsRepository.create({ name: tag });
-            return this.tagsRepository.save(tagObj);
-        });
-        const tagsInDb = await Promise.all([...promisses]);
+        const promises = tags.map(tag => this.saveTagPromise(tag.toLowerCase().trim(), createdPlaylistId));
+        const tagsInDb = await Promise.all([...promises]);
         return {
             idPlaylist: createdPlaylistId,
             ...playlist,
             tags: tagsInDb
         } as Playlist;
+    }
+
+    async saveTagPromise(tag: string, playlistId: number) {
+        const tagObj = this.tagsRepository.create({ name: tag, playlist_id: playlistId });
+        const tagInDb = await this.tagsRepository.save(tagObj);
+        return tagInDb;
     }
 }
