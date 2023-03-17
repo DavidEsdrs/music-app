@@ -4,5 +4,6 @@ export interface ICreatePlaylistDTO {
     visibility?: string;
     description?: string;
     released_on?: number;
-    path_featured_image?: string;
+    path_featured_picture?: string;
+    tags?: string[];
 }
