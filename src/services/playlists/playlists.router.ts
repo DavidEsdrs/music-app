@@ -12,6 +12,7 @@ import { getPlaylistSchema } from "./GetPlaylist/getPlaylist.middleware";
 import { buildGetPlaylists } from "./GetPlaylists/buildGetPlaylists";
 import { buildGetPlaylistsFromUser } from "./GetPlaylistsFromUser/buildGetPlaylistsFromUser";
 import { buildRemoveSongFromPlaylist } from "./RemoveSongFromPlaylist/buildRemoveSongFromPlaylist";
+import { buildUpdatePlaylist } from "./UpdatePlaylist/buildUpdatePlaylist";
 
 const router = Router();
 
@@ -28,5 +29,7 @@ router.post("/user/playlist/:id", ensureAuthUser, (req, res) => buildAddPlaylist
 router.delete("/playlist/:playlist_id", ensureAuthUser, (req, res) => buildDeletePlaylist().handle(req, res));
 
 router.delete("/playlist/:playlist/song/:song", ensureAuthUser, (req, res) => buildRemoveSongFromPlaylist().handle(req, res));
+
+router.put("/playlist/:id", validateAndParsePlaylistPictureUpload, ensureAuthUser, (req, res) => buildUpdatePlaylist().handle(req, res));
 
 export { router as playlistsRouter };
