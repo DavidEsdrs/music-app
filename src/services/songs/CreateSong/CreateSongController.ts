@@ -15,7 +15,7 @@ export class CreateSongController {
         const { title } = req.body;
         const file_path = req.file_props.file_name;
         const { user_id: creator_fk } = req;
-        const song = await this.service.execute({ song: { creator_fk, file_path, title } });
+        const song = await this.service.execute({ creator_fk, file_path, title });
         return res.json(song);
     }
 }

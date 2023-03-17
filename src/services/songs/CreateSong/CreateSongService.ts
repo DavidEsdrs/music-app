@@ -13,7 +13,7 @@ export class CreateSongService {
     ) {}
 
     async execute(args: ICreateSongDTO) {
-        const song = this.songsRepository.create(args.song);
+        const song = this.songsRepository.create(args);
         const songId = await this.songsRepository.saveSong(song);
         const songInDb = await this.songsRepository.findById(songId);
         return await fulfillSong(songInDb, this.fileHandling) as Song;
