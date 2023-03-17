@@ -17,7 +17,7 @@ const router = Router();
 
 router.post("/playlist/:playlist/song/:song", ensureAuthUser, (req, res) => buildAddSongToPlaylist().handle(req, res));
 
-router.post("/songs", ensureAuthUser, validateBody(createSongSchema), validateAndParseSongFileUpload, (req, res) => buildCreateSong().handle(req, res));
+router.post("/songs", ensureAuthUser, validateAndParseSongFileUpload, validateBody(createSongSchema), (req, res) => buildCreateSong().handle(req, res));
 
 router.get("/playlist/:id/song", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getSongsFromPlaylistQuerySchema), (req, res) => buildGetSongsFromPlaylist().handle(req, res));
 
