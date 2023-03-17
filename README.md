@@ -13,3 +13,7 @@
     - Express;
     - Typeorm;
     - MySql;
+    - FFmpeg;
+    - Joi;
+    - JsonWebToken;
+    - Multer;
