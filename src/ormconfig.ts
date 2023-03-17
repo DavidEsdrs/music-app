@@ -14,6 +14,8 @@ import { SongPlaylist } from "./entities/SongPlaylist";
 import { SongUser } from "./entities/SongUser";
 import { createRefreshTokenTable1678476984531 } from "./migrations/1678476984531-create_refresh_token_table";
 import { RefreshToken } from "./entities/RefreshToken";
+import { Tag } from "./entities/Tag";
+import { createTagsTable1678890947949 } from "./migrations/1678890947949-create_tags_table";
 
 dotenv.config({
     path: process.env.NODE_ENV === "dev" ? ".env.dev" : ".env.production"
@@ -29,7 +31,8 @@ const AppDataSource = new DataSource({
         PlaylistUser,
         SongPlaylist,
         SongUser,
-        RefreshToken
+        RefreshToken,
+        Tag
     ],
     migrations: [
         createUsersTable1676253240773,
@@ -38,13 +41,14 @@ const AppDataSource = new DataSource({
         createUsersPlaylistsJoinTable1676254515226,
         createPlaylistsSongsJoinTable1676255656167,
         createSongsUsersJoinTable1676255861532,
-        createRefreshTokenTable1678476984531
+        createRefreshTokenTable1678476984531,
+        createTagsTable1678890947949
     ]
 });
 
 AppDataSource.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
+    .then((manager) => {
+        console.log("Data Source has been initialized!");
     })
     .catch((err) => {
         console.error("Error during Data Source initialization", err)
