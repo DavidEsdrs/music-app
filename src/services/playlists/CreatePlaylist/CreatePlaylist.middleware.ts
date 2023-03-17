@@ -1,8 +1,6 @@
 import Joi from "joi";
-import { UnprocessableEntityError } from "../../../api/APIErrors";
-import { ExpressMiddleware } from "../../../utils/Types";
 
-const playlistSchema = Joi.object({
+export const playlistSchema = Joi.object({
     title: Joi.string().
         min(3).
         max(50).
@@ -22,13 +20,13 @@ const playlistSchema = Joi.object({
         optional(),
 
     featured_picture: Joi.any().
-        optional()
-});
+        optional(),
 
-export const validateCreatePlaylist: ExpressMiddleware = (req, res, next) => {
-    const { error } = playlistSchema.validate(req.body);
-    if(error) {
-        throw new UnprocessableEntityError();
-    }
-    return next();
-}
+    tags: Joi.array().items(
+            Joi.string().
+                min(2).
+                max(20)
+        ).
+        min(1).
+        required()
+});

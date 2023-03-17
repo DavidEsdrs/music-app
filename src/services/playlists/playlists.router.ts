@@ -2,10 +2,10 @@ import { query, Router } from "express";
 import { ensureAuthUser } from "../../middlewares/ensureAuthUser";
 import { ensureAuthUserSoft } from "../../middlewares/ensureAuthUserSoft";
 import { validateAndParsePlaylistPictureUpload } from "../../middlewares/playlists/uploadPlaylistPicture";
-import { validateQuery } from "../../utils/validations";
+import { validateBody, validateQuery } from "../../utils/validations";
 import { buildAddPlaylistToUser } from "./AddPlaylistToUser/buildAddPlaylistToUser";
 import { buildCreatePlaylist } from "./CreatePlaylist/buildCreatePlaylist";
-import { validateCreatePlaylist } from "./CreatePlaylist/CreatePlaylist.middleware";
+import { playlistSchema } from "./CreatePlaylist/CreatePlaylist.middleware";
 import { buildDeletePlaylist } from "./DeletePlaylist/buildDeletePlaylist";
 import { buildGetPlaylist } from "./GetPlaylist/buildGetPlaylist";
 import { getPlaylistSchema } from "./GetPlaylist/getPlaylist.middleware";
@@ -22,7 +22,7 @@ router.get("/user/:user_id/playlist", ensureAuthUserSoft, query({ plainObjects: 
 
 router.get("/playlist", query({ plainObjects: true }), (req, res) => buildGetPlaylists().handle(req, res));
 
-router.post("/playlist", ensureAuthUser, validateAndParsePlaylistPictureUpload, validateCreatePlaylist, (req, res) => buildCreatePlaylist().handle(req, res));
+router.post("/playlist", ensureAuthUser, validateAndParsePlaylistPictureUpload, validateBody(playlistSchema), (req, res) => buildCreatePlaylist().handle(req, res));
 
 router.post("/user/playlist/:id", ensureAuthUser, (req, res) => buildAddPlaylistToUser().handle(req, res));
 
