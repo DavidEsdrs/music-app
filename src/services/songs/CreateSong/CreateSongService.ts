@@ -12,8 +12,8 @@ export class CreateSongService {
         private fileHandling: FileHandling
     ) {}
 
-    async execute(args: ICreateSongDTO) {
-        const song = this.songsRepository.create(args);
+    async execute({ title, file_path, creator_fk, tags }: ICreateSongDTO) {
+        const song = this.songsRepository.create({ title, creator_fk, file_path });
         const songId = await this.songsRepository.saveSong(song);
         const songInDb = await this.songsRepository.findById(songId);
         return await fulfillSong(songInDb, this.fileHandling) as Song;
