@@ -1,6 +1,7 @@
 import { Song } from "../../../entities/Song";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
 import { ISongsRepository } from "../../../repositories/SongsRepository";
+import { ITagRepository } from "../../../repositories/TagRepository";
 import { FileHandling } from "../../../utils/fileHandling/FileHandling";
 import { fulfillSong } from "../../../utils/fulfillInfo";
 import { IAddSongToPlaylistService } from "../../playlists/AddSongToPlaylist/AddSongToPlaylistController";
@@ -9,6 +10,7 @@ import { ICreateSongDTO } from "./CreateSongDTO";
 export class CreateSongService {
     constructor(
         private songsRepository: ISongsRepository,
+        private tagsRepository: ITagRepository,
         private fileHandling: FileHandling
     ) {}
 
@@ -16,6 +18,18 @@ export class CreateSongService {
         const song = this.songsRepository.create({ title, creator_fk, file_path });
         const songId = await this.songsRepository.saveSong(song);
         const songInDb = await this.songsRepository.findById(songId);
-        return await fulfillSong(songInDb, this.fileHandling) as Song;
+        const promises = tags.map(tag => this.saveTagPromise(tag.toLowerCase().trim(), songId));
+        const tagsInDb = await Promise.all([...promises]);
+        const songsWithTags = await {
+            ...fulfillSong(songInDb, this.fileHandling),
+            tags: tagsInDb
+        };
+        return songsWithTags as Song;
+    }
+
+    async saveTagPromise(tag: string, song_id: number) {
+        const tagObj = this.tagsRepository.create({ name: tag, song_id });
+        const tagInDb = await this.tagsRepository.save(tagObj);
+        return tagInDb;
     }
 }
