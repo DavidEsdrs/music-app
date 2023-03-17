@@ -7,6 +7,8 @@
     - [X] Add songs to playlist;
     - [X] Add public playlists from another user;
     - [X] Public and private playlists;
+    - [X] Songs Streaming;
+    - [ ] Search songs and playlists by tags (TODO);
 
 - Technologies:
     - Typescript;
