@@ -21,7 +21,7 @@ router.get("/user/:user_id/playlist", ensureAuthUserSoft, query({ plainObjects: 
 
 router.get("/playlist", query({ plainObjects: true }), (req, res) => buildGetPlaylists().handle(req, res));
 
-router.post("/playlist", validateAndParsePlaylistPictureUpload, ensureAuthUser, validateCreatePlaylist, (req, res) => buildCreatePlaylist().handle(req, res));
+router.post("/playlist", ensureAuthUser, validateAndParsePlaylistPictureUpload, validateCreatePlaylist, (req, res) => buildCreatePlaylist().handle(req, res));
 
 router.post("/user/playlist/:id", ensureAuthUser, (req, res) => buildAddPlaylistToUser().handle(req, res));
 
