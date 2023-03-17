@@ -9,14 +9,15 @@ import { buildDonwloadSong } from "./DownloadSong/buildDownloadSong";
 import { buildGetSong } from "./GetSong/buildGetSong";
 import { buildGetSongsFromPlaylist } from "./GetSongsFromPlaylist/buildGetSongsFromPlaylist";
 import { getSongsFromPlaylistQuerySchema } from "./GetSongsFromPlaylist/getSongsFromPlaylist.middleware";
-import { validateQuery } from "../../utils/validations";
+import { validateBody, validateQuery } from "../../utils/validations";
 import { getSongSchema } from "./GetSong/getSong.middleware";
+import { createSongSchema } from "./CreateSong/CreateSong.middleware";
 
 const router = Router();
 
 router.post("/playlist/:playlist/song/:song", ensureAuthUser, (req, res) => buildAddSongToPlaylist().handle(req, res));
 
-router.post("/playlist/songs", ensureAuthUser, validateAndParseSongFileUpload, (req, res) => buildCreateSong().handle(req, res));
+router.post("/playlist/songs", ensureAuthUser, validateBody(createSongSchema), validateAndParseSongFileUpload, (req, res) => buildCreateSong().handle(req, res));
 
 router.get("/playlist/:id/song", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getSongsFromPlaylistQuerySchema), (req, res) => buildGetSongsFromPlaylist().handle(req, res));
 
