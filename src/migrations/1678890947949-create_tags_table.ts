@@ -14,10 +14,8 @@ export class createTagsTable1678890947949 implements MigrationInterface {
                 updated_at DATETIME DEFAULT NOW(),
                 FOREIGN KEY (playlist_id) 
                     REFERENCES playlists(idPlaylist)
-                    ON DELETE SET NULL,
                 FOREIGN KEY (song_id) 
                     REFERENCES songs(idSong)
-                    ON DELETE SET NULL,
                 CONSTRAINT check_fks CHECK((playlist_id IS NOT NULL AND song_id IS NULL) OR (song_id IS NOT NULL AND playlist_id IS NULL))
             )
         `);
