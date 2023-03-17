@@ -9,7 +9,7 @@
     - [X] Public and private playlists;
     - [X] Songs Streaming;
     - [ ] Search songs and playlists by tags (TODO);
-
+    
 - Technologies:
     - Typescript;
     - Express;
