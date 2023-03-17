@@ -14,7 +14,7 @@ export class CreatePlaylistController {
     async handle(req: Request, res: Response) {
         const body = req.body;
         const { user_id } = req;
-        const path_featured_picture = req.file_props.file_name;
+        const path_featured_picture = req.file_props?.file_name;
         const playlist = await this.service.execute({
             ...body,
             released_on: req.body.released_on ?? new Date().getUTCFullYear(),
