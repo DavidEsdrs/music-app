@@ -43,8 +43,8 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
         const playlist = await this.query(`
             SELECT idPlaylist AS id, title, visibility, description, released_on, path_featured_picture, created_at, updated_at
             FROM playlists
-            WHERE idPlaylist=${creator_fk} AND title="UPLOADED_SONGS"
-        `);
+            WHERE idPlaylist=? AND title="UPLOADED_SONGS"
+        `, [creator_fk]);
         return playlist;
     },
 
@@ -55,8 +55,8 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
             INNER JOIN songs_playlists AS sp ON sp.playlist_id=idPlaylist
             INNER JOIN songs ON idSong=sp.song_id
             INNER JOIN users u ON songs.creator_fk=u.idUser
-            WHERE idPlaylist=${id}
-        `);
+            WHERE idPlaylist=?
+        `, [id]);
         return q;
     },
 
@@ -142,8 +142,8 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
             FROM users
             INNER JOIN playlists_users AS pu ON idUser=pu.user_id
             INNER JOIN playlists ON pu.playlist_id=playlists.idPlaylist
-            WHERE idUser=${user_id}
-        `);
+            WHERE idUser=?
+        `, [user_id]);
 
         return playlists;
     },
@@ -152,14 +152,14 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
         await this.manager.transaction(async (manager: EntityManager) => {
             try {
                 const spInsert = manager.query(`
-                    INSERT INTO songs_playlists(playlist_id, song_id) VALUES(${playlist_id}, ${song_id})
-                `);
+                    INSERT INTO songs_playlists(playlist_id, song_id) VALUES(?, ?)
+                `, [playlist_id, song_id]);
     
                 const playlistsUpdate = manager.query(`
                     UPDATE playlists
                     SET updated_at=NOW()
-                    WHERE idPlaylist=${playlist_id}
-                `);
+                    WHERE idPlaylist=?
+                `, [playlist_id]);
     
                 await Promise.all([ spInsert, playlistsUpdate ]);
             }
@@ -185,8 +185,8 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
             INNER JOIN users u ON p.creator_fk=u.idUser
             WHERE p.visibility="public"
             ORDER BY RAND()
-            LIMIT ${limit && !isNaN(limit) ? limit : 5}
-        `);
+            LIMIT ?
+        `, [limit && !isNaN(limit) ? limit : 5]);
 
         return playlists;
     },
@@ -195,8 +195,8 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
         await this.query(`
             DELETE 
             FROM songs_playlists
-            WHERE songs_playlists.song_id=${song_id} AND songs_playlists.playlist_id=${playlist_id}
-        `);
+            WHERE songs_playlists.song_id=? AND songs_playlists.playlist_id=?
+        `, [song_id, playlist_id]);
     },
 
     async updatePlaylist(playlist: Playlist, partial_playlist: Partial<Playlist>) {
