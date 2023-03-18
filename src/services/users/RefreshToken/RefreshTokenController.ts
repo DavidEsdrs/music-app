@@ -7,7 +7,8 @@ import { IRefreshTokenRepository } from "../../../repositories/RefreshTokenRepos
 
 export class RefreshTokenController {
     constructor(
-        private refreshTokenRepository: IRefreshTokenRepository
+        private refreshTokenRepository: IRefreshTokenRepository,
+        private userRepository: IUsersRepository
     ) {}
 
     async handle(req: Request, res: Response) {
@@ -29,7 +30,8 @@ export class RefreshTokenController {
                     expiresIn: process.env.ACCESS_TOKEN_LIFESPAN,
                     subject: decoded.sub
                 });
-                return res.json({ accessToken });
+                const user = await this.userRepository.findById(Number(decoded.sub));
+                return res.json({ ...user, accessToken });
             }
         );
     }
