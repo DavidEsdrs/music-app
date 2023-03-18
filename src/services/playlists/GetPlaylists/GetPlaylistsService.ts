@@ -6,7 +6,7 @@ export class GetPlaylists {
         private playlistsRepository: IPlaylistsRepository
     ) {}
 
-    async execute({ limit }: IGetPlaylistsDTO) {
+    async execute({ limit = 5 }: IGetPlaylistsDTO) {
         const playlists = await this.playlistsRepository.findFamousPlaylists(limit);
         return playlists;
     }
