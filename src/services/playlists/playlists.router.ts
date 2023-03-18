@@ -18,7 +18,7 @@ const router = Router();
 
 router.get("/playlist/:id", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getPlaylistSchema), (req, res) => buildGetPlaylist().handle(req, res));
 
-router.get("/user/:user_id/playlist", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getPlaylistSchema), (req, res) => buildGetPlaylistsFromUser().handle(req, res));
+router.get("/user/:user_id/playlist", ensureAuthUser, query({ plainObjects: true }), validateQuery(getPlaylistSchema), (req, res) => buildGetPlaylistsFromUser().handle(req, res));
 
 router.get("/playlist", query({ plainObjects: true }), (req, res) => buildGetPlaylists().handle(req, res));
 
