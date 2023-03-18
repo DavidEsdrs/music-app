@@ -13,4 +13,5 @@ export interface ISongsRepository extends GenericRepository<Song> {
     saveSong(song: Partial<Song>): Promise<number>;
     deleteSong(id: number): Promise<void>;
     joinSongPlaylistUser(song_id: number): Promise<SongJoin>;
+    joinSongPublicPlaylists(song_id: number): Promise<SongJoin>;
 }
