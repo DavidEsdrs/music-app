@@ -19,8 +19,8 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
 
     async saveRelationUserSong(user_id: number, song_id: number) {
         const userSongRel = await this.query(`
-            INSERT INTO songs_users(user_id, song_id) VALUES (${user_id}, ${song_id})
-        `);
+            INSERT INTO songs_users(user_id, song_id) VALUES (?, ?)
+        `, [user_id, song_id]);
         return userSongRel;
     },
 
@@ -29,22 +29,22 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
             try {
                 const songInDb = await manager.query(`
                     INSERT INTO songs(idSong, title, file_path, creator_fk) 
-                    VALUES(NULL, "${song_partial.title}", "${song_partial.file_path}", ${song_partial.creator_fk})
-                `);
+                    VALUES(NULL, ?, ?, ?)
+                `, [song_partial.title, song_partial.file_path, song_partial.creator_fk]);
 
                 await manager.query(`
-                    INSERT INTO songs_users(user_id, song_id) VALUES (${song_partial.creator_fk}, ${songInDb.insertId})
-                `);
+                    INSERT INTO songs_users(user_id, song_id) VALUES (?, ?)
+                `, [song_partial.creator_fk, songInDb.insertId]);
 
                 const default_playlist = (await manager.query(`
                     SELECT idPlaylist
                     FROM playlists
-                    WHERE playlists.creator_fk=${song_partial.creator_fk} AND playlists.title="UPLOADED_SONGS"
-                `))[0];
+                    WHERE playlists.creator_fk=? AND playlists.title="UPLOADED_SONGS"
+                `, [song_partial.creator_fk]))[0];
 
                 await manager.query(`
-                    INSERT INTO songs_playlists(playlist_id, song_id) VALUES(${default_playlist.idPlaylist}, ${songInDb.insertId})
-                `);
+                    INSERT INTO songs_playlists(playlist_id, song_id) VALUES(?, ?)
+                `, [default_playlist.idPlaylist, songInDb.insertId]);
 
                 return songInDb.insertId;
             }
@@ -64,8 +64,8 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
             INNER JOIN users ON songs.creator_fk=users.idUser
             INNER JOIN songs_playlists AS sp ON songs.idSong=sp.song_id
             INNER JOIN playlists ON sp.playlist_id=playlists.idPlaylist
-            WHERE idSong=${song_id}
-        `);
+            WHERE idSong=?
+        `, [song_id]);
 
         if(song.length <= 0) {
             throw new UnauthorizedRequestError();
@@ -88,8 +88,8 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
             FROM songs s
             INNER JOIN songs_playlists sp ON s.idSong=sp.song_id
             INNER JOIN playlists p ON sp.playlist_id=p.idPlaylist
-            WHERE s.idSong=${song_id} AND p.creator_fk=s.creator_fk;
-        `);
+            WHERE s.idSong=? AND p.creator_fk=s.creator_fk;
+        `, [song_id]);
 
         if(song.length <= 0) {
             throw new SongNotFoundError();
@@ -112,8 +112,8 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
             FROM songs
             INNER JOIN songs_playlists AS sp ON songs.idSong=sp.song_id
             INNER JOIN playlists AS p ON p.idPlaylist=sp.playlist_id
-            WHERE songs.idSong=${song_id} AND p.visibility = "public";
-        `);
+            WHERE songs.idSong=? AND p.visibility = "public";
+        `, [song_id]);
 
         return Number(song[0].count) > 0;
     },
@@ -122,7 +122,7 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
         await this.query(`
             DELETE
             FROM songs 
-            WHERE idSong=${id}
-        `);
+            WHERE idSong=?
+        `, [id]);
     }
 });
