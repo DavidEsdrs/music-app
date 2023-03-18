@@ -20,7 +20,7 @@ export class UpdatePlaylistController {
         const response = await this.service.execute({ 
             partial_playlist: {
                 ...partial_playlist,
-                path_featured_picture: file_props.file_name
+                path_featured_picture: file_props?.file_name
             }, 
             playlist_id, 
             user_id 
