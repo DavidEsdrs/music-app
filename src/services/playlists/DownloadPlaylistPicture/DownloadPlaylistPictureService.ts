@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs";
-import { PlaylistsNotFoundError } from "../../../api/APIErrors";
+import { ForbiddenRequestError, PlaylistsNotFoundError } from "../../../api/APIErrors";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
 import { IDownloadPlaylistPictureDTO } from "./DownloadPlaylistPictureDTO";
 
@@ -12,7 +12,7 @@ export class DownloadPlaylistPictureService {
     async execute({ user_id, playlist_id }: IDownloadPlaylistPictureDTO) {
         const playlist = await this.playlistsRepository.findById(playlist_id);
         if(playlist.creator_fk !== user_id && playlist.visibility !== "public") {
-            throw new PlaylistsNotFoundError();
+            throw new ForbiddenRequestError();
         }
         if(!playlist.path_featured_picture) {
             return null;
