@@ -4,7 +4,8 @@ export const createUserSchema = Joi.object({
     username: Joi.
         string().
         min(2).
-        max(20),
+        max(20).
+        required(),
     email: Joi.
         string().
         email().
