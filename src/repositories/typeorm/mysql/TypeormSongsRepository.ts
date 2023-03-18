@@ -12,7 +12,7 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
             FROM songs s
             INNER JOIN songs_users su ON s.idSong=su.song_id
             INNER JOIN users u ON su.user_id=u.idUser
-            WHERE s.idSong=:idSong
+            WHERE s.idSong=?
         `, [idSong]);
         return song;
     },
