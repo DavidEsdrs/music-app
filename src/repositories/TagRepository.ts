@@ -10,5 +10,5 @@ export type SongAndPlaylist = {
 
 export interface ITagRepository extends GenericRepository<Tag> {
     findByName(name: string): Promise<Tag>;
-    findSongAndPlaylistByTag(tag: string, limit: number): Promise<SongAndPlaylist[]>;
+    findSongAndPlaylistByTag(tag: string, limit: number): Promise<SongAndPlaylist>;
 }
