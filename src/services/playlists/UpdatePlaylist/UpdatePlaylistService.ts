@@ -14,7 +14,7 @@ export class UpdatePlaylistService {
         if(!playlist || (playlist.creator_fk !== user_id)) {
             throw new PlaylistsNotFoundError();
         }
-        await this.playlistsRepository.updatePlaylist(playlist_id, partial_playlist);
+        await this.playlistsRepository.updatePlaylist(playlist, partial_playlist);
         const res = new ResponseEntity<Playlist>("Playlist successfully updated!", 200);
         return res;
     }
