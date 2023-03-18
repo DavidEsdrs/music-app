@@ -3,7 +3,7 @@ import { SongAndPlaylist } from "../../../repositories/TagRepository";
 import { ISearchByTagDTO } from "./SearchByTagDTO";
 
 interface ISearchByTagService {
-    execute(args: ISearchByTagDTO): Promise<SongAndPlaylist[]>;
+    execute(args: ISearchByTagDTO): Promise<SongAndPlaylist>;
 }
 
 export class SearchByTagController {
