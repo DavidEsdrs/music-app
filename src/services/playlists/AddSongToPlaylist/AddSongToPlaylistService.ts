@@ -1,4 +1,4 @@
-import { UnauthorizedRequestError } from "../../../api/APIErrors";
+import { PlaylistsNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
 import { ResponseEntity } from "../../../api/ResponseEntity";
 import { SongPlaylist } from "../../../entities/SongPlaylist";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
@@ -14,14 +14,13 @@ export class AddSongToPlaylistService {
 
     async execute({ user_id, song_id, playlist_id }: IAddSongToPlaylistDTO) {
         const playlist = await this.playlistsRepository.findById(playlist_id);
-
+        
         if(playlist.creator_fk !== user_id) {
-            console.log("Invalid playlist!");
             throw new UnauthorizedRequestError();
         }
         
-        const song = await this.songsRepository.joinSongPlaylistUser(song_id);
-        
+        const song = await this.songsRepository.joinSongPublicPlaylists(song_id);
+
         if(!this.isRequesterCreator(song.creator_fk, user_id)  && !isPublicSong(song.playlists)) {
             throw new UnauthorizedRequestError();
         }
