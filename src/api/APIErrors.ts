@@ -67,3 +67,9 @@ export class DefaultPlaylistDeleteError extends APIErrors {
         super(422, "Can't delete default playlist!");
     }
 }
+
+export class DuplicateTagError extends APIErrors {
+    constructor() {
+        super(409, "Duplicate tag entry!");
+    }
+}
