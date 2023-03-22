@@ -11,10 +11,6 @@ export class GetFeaturedSongsService {
         const songTags = await this.tagsRepository.getTagsFromSong(song_id);
         const tagsUsageCount = await this.tagsRepository.countTagByUsage(songTags);
         const relatedByMostUsedTag = await this.tagsRepository.findSongAndPlaylistByTag(tagsUsageCount[0].name, 10);
-        // return {
-        //     songs: relatedByMostUsedTag.songs.map(cleanObj),
-        //     playlists: relatedByMostUsedTag.playlists.map(cleanObj)
-        // } as SongAndPlaylist;
         return cleanObj(relatedByMostUsedTag) as SongAndPlaylist;
     }
 }
