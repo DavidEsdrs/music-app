@@ -47,5 +47,26 @@ export const TypeormTagRepository = AppDataSource.getRepository(Tag).extend({
         };
         songsAndPlaylists.forEach((sp: any) => sp.idSong ? sps.songs.push(sp) : sps.playlists.push(sp));
         return sps;
+    },
+
+    async getTagsFromSong(song_id: number) {
+        const tagsFromSong = await this.query(`
+            SELECT *
+            FROM tags t
+            WHERE t.song_id=?
+        `, [song_id]);
+        return tagsFromSong;
+    },
+
+    async countTagByUsage(tags: Tag[]) {
+        const tagsCount = await this.
+            createQueryBuilder("t").
+            select("t.name", "name").
+            addSelect("COUNT(*)", "quantity").
+            where("t.name IN (:...tags)", { tags: tags.map(t => t.name) }).
+            groupBy("t.name").
+            orderBy("quantity", "DESC").
+            getRawMany();
+        return tagsCount.map(t => ({ ...t, quantity: Number(t.quantity) }));
     }
 });
