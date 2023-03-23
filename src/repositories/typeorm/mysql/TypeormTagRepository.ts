@@ -1,6 +1,10 @@
+import { Playlist } from "../../../entities/Playlist";
+import { Song } from "../../../entities/Song";
 import { Tag } from "../../../entities/Tag";
 import AppDataSource from "../../../ormconfig";
-import { SongAndPlaylist } from "../../TagRepository";
+import { SongAndPlaylist, TagSongOrPlaylist } from "../../TagRepository";
+
+
 
 export const TypeormTagRepository = AppDataSource.getRepository(Tag).extend({
     async findById(idTag: number) {
@@ -48,6 +52,22 @@ export const TypeormTagRepository = AppDataSource.getRepository(Tag).extend({
         songsAndPlaylists.forEach((sp: any) => sp.idSong ? sps.songs.push(sp) : sps.playlists.push(sp));
         return sps;
     },
+    async findSongAndPlaylistByTags(tags: string[], limit: number) {
+        const songsAndPlaylists = await this.
+            createQueryBuilder("tag").
+            leftJoinAndSelect("playlists", "playlist", "tag.playlist_id=playlist.idPlaylist").
+            leftJoinAndSelect("songs", "song", "tag.song_id=song.idSong").
+            where("tag.name IN (:...tags)", { tags }).
+            getRawMany();
+
+        const sps: TagSongOrPlaylist = {
+            songs: [],
+            playlists: []
+        };
+
+        songsAndPlaylists.forEach((sp: any) => sp.song_idSong ? sps.songs.push(sp) : sps.playlists.push(sp));
+        return sps;
+    },
 
     async getTagsFromSong(song_id: number) {
         const tagsFromSong = await this.query(`
@@ -70,3 +90,5 @@ export const TypeormTagRepository = AppDataSource.getRepository(Tag).extend({
         return tagsCount.map(t => ({ ...t, quantity: Number(t.quantity) }));
     }
 });
+
+export { TagSongOrPlaylist };
