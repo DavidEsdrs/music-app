@@ -1,4 +1,5 @@
 import { Song } from "../../../entities/Song";
+import { Tag } from "../../../entities/Tag";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
 import { ISongsRepository } from "../../../repositories/SongsRepository";
 import { ITagRepository } from "../../../repositories/TagRepository";
@@ -18,7 +19,7 @@ export class CreateSongService {
         const song = this.songsRepository.create({ title, creator_fk, file_path });
         const songId = await this.songsRepository.saveSong(song);
         const songInDb = await this.songsRepository.findById(songId);
-        const promises = tags.map(tag => this.saveTagPromise(tag.toLowerCase().trim(), songId));
+        const promises = tags.map(tag => this.saveTagPromise(JSON.parse(tag), songId));
         const tagsInDb = await Promise.all([...promises]);
         const songsWithTags = await {
             ...fulfillSong(songInDb, this.fileHandling),
@@ -27,8 +28,8 @@ export class CreateSongService {
         return songsWithTags as Song;
     }
 
-    async saveTagPromise(tag: string, song_id: number) {
-        const tagObj = this.tagsRepository.create({ name: tag, song_id });
+    async saveTagPromise(tag: Tag, song_id: number) {
+        const tagObj = this.tagsRepository.create({ name: tag.name, song_id, type: tag.type });
         const tagInDb = await this.tagsRepository.save(tagObj);
         return tagInDb;
     }

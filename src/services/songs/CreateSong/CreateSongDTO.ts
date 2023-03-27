@@ -1,4 +1,5 @@
 import { Song } from "../../../entities/Song";
+import { Tag } from "../../../entities/Tag";
 
 export interface ICreateSongDTO {
     title: string;
