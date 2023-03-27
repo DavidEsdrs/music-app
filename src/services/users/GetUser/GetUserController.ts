@@ -13,7 +13,6 @@ export class GetUserController {
 
     async handle(req: Request, res: Response) {
         const id = Number(req.params.id)
-        const { user_id: requester_id } = req;
         const user = await this.service.execute({ user_id: id });
         return res.json(user);
     }
