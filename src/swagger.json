@@ -132,7 +132,7 @@
                 "security": [{"cookieRefreshToken": []}],
                 "responses": {
                     "200": {
-                        "summary": "Operation succeed",
+                        "summary": "Successful operation",
                         "description": "The jwt refresh token cookie was validated and the client can get a new access token",
                         "schema": {
                             "allOf": [
@@ -147,6 +147,19 @@
                                 }
                             ]
                         }
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "get": {
+                "summary": "Log out user",
+                "description": "Logs out user by removing its refresh token cookie",
+                "tags": ["users"],
+                "responses": {
+                    "204": {
+                        "summary": "Successful operation",
+                        "description": "The server successfully removed the refresh token cookie from the client"
                     }
                 }
             }
