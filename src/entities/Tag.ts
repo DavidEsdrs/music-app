@@ -14,6 +14,9 @@ export class Tag {
     @Column({ name: "song_id", type: "integer" })
     song_id: number;
 
+    @Column({ name: "type", type: "enum", enum: ["feature", "genre", "artist"] })
+    type: "feature" | "genre" | "artist";
+
     @CreateDateColumn()
     created_at: Date;
 
