@@ -20,9 +20,10 @@ export class CreateSongService {
         const songId = await this.songsRepository.saveSong(song);
         const songInDb = await this.songsRepository.findById(songId);
         const promises = tags.map(tag => this.saveTagPromise(JSON.parse(tag), songId));
-        const tagsInDb = await Promise.all([...promises]);
-        const songsWithTags = await {
-            ...fulfillSong(songInDb, this.fileHandling),
+        const fulfilledSongPromise = fulfillSong(songInDb, this.fileHandling);
+        const [fulfilledSong, ...tagsInDb] = await Promise.all([fulfilledSongPromise, ...promises]);
+        const songsWithTags = {
+            ...fulfilledSong,
             tags: tagsInDb
         };
         return songsWithTags as Song;
