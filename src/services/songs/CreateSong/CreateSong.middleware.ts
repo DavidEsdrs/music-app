@@ -7,9 +7,10 @@ export const createSongSchema = Joi.object({
         required(),
     
     tags: Joi.array().items(
-            Joi.string().
-                min(2).
-                max(20)
+            Joi.object({
+                name: Joi.string().min(2).max(20).required(),
+                type: Joi.string().allow("feature", "genre", "artist")
+            })
         ).
         min(1).
         required()
