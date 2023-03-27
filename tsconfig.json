@@ -19,6 +19,7 @@
      ],
      "sourceRoot": "./src/@types/",
      "noImplicitAny": true,
-     "noImplicitThis": true
+     "noImplicitThis": true,
+     "resolveJsonModule": true
   }
 }
