@@ -23,15 +23,17 @@ type TagPlaylistJoin = TagWithPrefix & PlaylistWithPrefix;
 
 type TagSongJoin = TagWithPrefix & SongWithPrefix;
 
-export type TagSongOrPlaylist = {
+export interface TagSongOrPlaylist {
     songs: TagSongJoin[],
     playlists: TagPlaylistJoin[]
 }
+
+type TagCount = Tag & { quantity: number; };
 
 export interface ITagRepository extends GenericRepository<Tag> {
     findByName(name: string): Promise<Tag>;
     findSongAndPlaylistByTag(tag: string, limit: number): Promise<SongAndPlaylist>;
     findSongAndPlaylistByTags(tags: string[], limit: number): Promise<TagSongOrPlaylist>;
     getTagsFromSong(song_id: number): Promise<Tag[]>;
-    countTagByUsage(tags: Tag[]): Promise<any>;
+    countTagByUsage(tags: Tag[]): Promise<TagCount[]>;
 }

@@ -52,19 +52,20 @@ export const TypeormTagRepository = AppDataSource.getRepository(Tag).extend({
         songsAndPlaylists.forEach((sp: any) => sp.idSong ? sps.songs.push(sp) : sps.playlists.push(sp));
         return sps;
     },
-    async findSongAndPlaylistByTags(tags: string[], limit: number) {
+    async findSongAndPlaylistByTags(tags: string[], limit: number = 10) {
         const songsAndPlaylists = await this.
             createQueryBuilder("tag").
             leftJoinAndSelect("playlists", "playlist", "tag.playlist_id=playlist.idPlaylist").
             leftJoinAndSelect("songs", "song", "tag.song_id=song.idSong").
             where("tag.name IN (:...tags)", { tags }).
+            limit(limit).
             getRawMany();
 
         const sps: TagSongOrPlaylist = {
             songs: [],
             playlists: []
         };
-
+        
         songsAndPlaylists.forEach((sp: any) => sp.song_idSong ? sps.songs.push(sp) : sps.playlists.push(sp));
         return sps;
     },
@@ -82,9 +83,11 @@ export const TypeormTagRepository = AppDataSource.getRepository(Tag).extend({
         const tagsCount = await this.
             createQueryBuilder("t").
             select("t.name", "name").
+            addSelect("t.type", "type").
             addSelect("COUNT(*)", "quantity").
             where("t.name IN (:...tags)", { tags: tags.map(t => t.name) }).
             groupBy("t.name").
+            addGroupBy("t.type").
             orderBy("quantity", "DESC").
             getRawMany();
         return tagsCount.map(t => ({ ...t, quantity: Number(t.quantity) }));
