@@ -8,6 +8,7 @@ export class createTagsTable1678890947949 implements MigrationInterface {
             CREATE TABLE tags(
                 idTag INT PRIMARY KEY AUTO_INCREMENT,
                 name VARCHAR(20) NOT NULL,
+                type ENUM("genre", "feature", "artist") NOT NULL DEFAULT "feature",
                 playlist_id INT,
                 song_id INT,
                 created_at DATETIME DEFAULT NOW(),
