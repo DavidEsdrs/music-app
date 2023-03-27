@@ -1,0 +1,220 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Music App API",
+        "description": "API to songs streaming and playlist management"
+    },
+    "servers": [
+        {
+            "url": "https://localhost:3000/api",
+            "description": "API endpoint to production"
+        }
+    ],
+    "paths": {
+        "/users": {
+            "post": {
+                "summary": "User registration",
+                "description": "This route is responsible for register a new user",
+                "tags": ["users"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/user"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "schema": {
+                            "$ref": "#/components/schemas/user"
+                        }
+                    },
+                    "401": {
+                        "summary": "Operation failed",
+                        "description": "The given email is already used",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "description": "Describes the error as clear as possible"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{userId}": {
+            "get": {
+                "summary": "User information",
+                "description": "This route allows the client to get info of the user, doesn't return any sesible information",
+                "tags": ["users"],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "Id of the user to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "schema": {
+                            "$ref": "#/components/schemas/user"
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "User login",
+                "description": "This endpoint is used to login the used by giving its access token",
+                "tags": ["users"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "description": "The registered unique email",
+                                        "example": "dav@email.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "description": "The password related to the given email",
+                                        "minLength": 5
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "401": {
+                        "summary": "Operation failed",
+                        "description": "The given credentials is invalid either because the email or the password is wrong",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "description": "Describes the error as clear as possible"
+                                }
+                            }
+                        }
+                    },
+                    "200": {
+                        "description": "User logged in successfully",
+                        "schema": {
+                            "$ref": "#/components/schemas/user"
+                        }
+                    }
+                }
+            }
+        },
+        "/refresh": {
+            "get": {
+                "summary": "Access token refresh",
+                "description": "Route to refresh the access token of the user",
+                "tags": ["users"],
+                "security": [{"cookieRefreshToken": []}],
+                "responses": {
+                    "200": {
+                        "summary": "Operation succeed",
+                        "description": "The jwt refresh token cookie was validated and the client can get a new access token",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/user"
+                                },
+                                {
+                                    "accessToken": {
+                                        "type": "string",
+                                        "description": "The new access token"
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "user": {
+                "type": "object",
+                "properties": {
+                    "idUser": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "username": {
+                        "type": "string",
+                        "description": "A custom username for the user",
+                        "example": "david",
+                        "minLength": 2,
+                        "maxLength": 20
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "An unique email for the user",
+                        "example": "dav@email.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "description": "A password to user authentication",
+                        "minLength": 5,
+                        "writeOnly": true,
+                        "example": "123456"
+                    },
+                    "bio": {
+                        "type": "string",
+                        "description": "An user description"
+                    },
+                    "path_profile_picture": {
+                        "type": "string",
+                        "description": "Holds the path of the user profile image",
+                        "readOnly": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            },
+            "cookieRefreshToken": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "jwt"
+            }
+        }
+    }
+}
