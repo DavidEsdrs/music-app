@@ -27,8 +27,7 @@ export class LoginUserController {
             sameSite: 'none',
             secure: true,
             maxAge: 24 * 60 * 60 * 1000,
-            path: "/",
-            domain: "local.host.br"
+            path: "/"
         });
         return res.json({
             ...token,
