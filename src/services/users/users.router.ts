@@ -16,7 +16,7 @@ const router = Router();
 
 router.post("/users", validateBody(createUserSchema), (req, res) => buildCreateUser().handle(req, res));
 router.post("/login", validateBody(loginSchema), (req, res) => buildLoginService().handle(req, res));
-router.get("/get", (req, res) => buildGetUser().handle(req, res));
+router.get("/users/:id", (req, res) => buildGetUser().handle(req, res));
 router.get("/refresh", (req, res) => new RefreshTokenController(TypeormRefreshTokenRepository, TypeormUsersRepository).handle(req, res));
 router.get("/logout", (req, res) => new LogoutUserController(TypeormRefreshTokenRepository).handle(req, res));
 
