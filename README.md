@@ -20,6 +20,9 @@
     - JsonWebToken;
     - Multer;
 
+# API Docs
+After setting up everything, you can find the API documentation by accessing [https://localhost:3000/api/docs](https://localhost:3000/api/docs).
+
 ## Getting started
 - This project uses the `ffmpeg` package for get some information from the uploaded files, to run the project properly, install the package in your machine with your favorite package manager:
 - Intallation with `chocolatey`:
@@ -62,19 +65,3 @@ FRONT_END_URL="https://local.host.br:3001"
 SSL_CERT_KEY="localhost-key.pem"
 SSL_CERT="localhost.pem"
 ```
-
-
-# TODO
-- Featured playlists:
-    * When search featured playlist search by the most used tag present in the playlist;
-    * Query:
-        - Affinity:
-            * How equal are the given song with the songs related to;
-    * Tag:
-        - Name;
-        - Type:
-            * Not Null;
-            * Enum:
-                - Genre;
-                - Feature;
-                - Artist;
