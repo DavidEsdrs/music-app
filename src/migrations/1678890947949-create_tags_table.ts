@@ -3,28 +3,34 @@ import { MigrationInterface, QueryRunner } from "typeorm"
 export class createTagsTable1678890947949 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-
         await queryRunner.query(`
-            CREATE TABLE tags(
-                idTag INT PRIMARY KEY AUTO_INCREMENT,
+            CREATE TABLE song_tags (
+                idSongTag INT PRIMARY KEY AUTO_INCREMENT,
+                song_id INT NOT NULL,
                 name VARCHAR(20) NOT NULL,
-                type ENUM("genre", "feature", "artist") NOT NULL DEFAULT "feature",
-                playlist_id INT,
-                song_id INT,
+                tag_type ENUM("genre", "feature", "artist") NOT NULL DEFAULT "feature",
                 created_at DATETIME DEFAULT NOW(),
                 updated_at DATETIME DEFAULT NOW(),
-                FOREIGN KEY (playlist_id) 
-                    REFERENCES playlists(idPlaylist),
-                FOREIGN KEY (song_id) 
-                    REFERENCES songs(idSong),
-                CONSTRAINT check_fks CHECK((playlist_id IS NOT NULL AND song_id IS NULL) OR (song_id IS NOT NULL AND playlist_id IS NULL))
-            )
+                FOREIGN KEY (song_id) REFERENCES songs(idSong)
+            );
+        `);
+
+        await queryRunner.query(`
+            CREATE TABLE playlist_tags (
+                idPlaylistTag INT PRIMARY KEY AUTO_INCREMENT,
+                playlist_id INT NOT NULL,
+                name VARCHAR(20) NOT NULL,
+                tag_type ENUM("genre", "feature", "artist") NOT NULL DEFAULT "feature",
+                created_at DATETIME DEFAULT NOW(),
+                updated_at DATETIME DEFAULT NOW(),
+                FOREIGN KEY (playlist_id) REFERENCES playlists(idPlaylist)
+            );    
         `);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
 
-        await queryRunner.query(`DROP TABLE tags`);
+        await queryRunner.query(`DROP TABLE song_tags`);
+        await queryRunner.query(`DROP TABLE playlist_tags`);
     }
-
 }
