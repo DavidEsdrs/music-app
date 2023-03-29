@@ -1,4 +1,5 @@
 import { Playlist } from "../../../entities/Playlist";
+import { TagPlaylist } from "../../../entities/Tag";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
 import { ITagRepository } from "../../../repositories/TagRepository";
 import { ICreatePlaylistDTO } from "./CreatePlaylistDTO";
@@ -12,7 +13,7 @@ export class CreatePlaylistService {
     async execute({ title, description, creator_fk, path_featured_picture, released_on, tags, visibility }: ICreatePlaylistDTO) {
         const playlist = this.playlistsRepository.create({ title, description, creator_fk, path_featured_picture, released_on, visibility });
         const createdPlaylistId = await this.playlistsRepository.savePlaylist(playlist);
-        const promises = tags.map(tag => this.saveTagPromise(tag.toLowerCase().trim(), createdPlaylistId));
+        const promises = tags.map(tag => this.saveTagPromise(tag, createdPlaylistId));
         const tagsInDb = await Promise.all([...promises]);
         return {
             idPlaylist: createdPlaylistId,
@@ -21,8 +22,8 @@ export class CreatePlaylistService {
         } as Playlist;
     }
 
-    async saveTagPromise(tag: string, playlistId: number) {
-        const tagObj = this.tagsRepository.create({ name: tag, playlist_id: playlistId });
+    async saveTagPromise(tag: TagPlaylist, playlistId: number) {
+        const tagObj = this.tagsRepository.create({ name: tag.name, type: tag.type, playlist_id: playlistId });
         const tagInDb = await this.tagsRepository.save(tagObj);
         return tagInDb;
     }

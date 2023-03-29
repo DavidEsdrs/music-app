@@ -1,3 +1,5 @@
+import { TagPlaylist } from "../../../entities/Tag";
+
 export interface ICreatePlaylistDTO {
     title: string;
     creator_fk: number;
@@ -5,5 +7,5 @@ export interface ICreatePlaylistDTO {
     description?: string;
     released_on?: number;
     path_featured_picture?: string;
-    tags?: string[];
+    tags?: TagPlaylist[];
 }
