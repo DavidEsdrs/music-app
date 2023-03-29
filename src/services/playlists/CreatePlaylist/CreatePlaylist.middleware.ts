@@ -16,7 +16,7 @@ export const playlistSchema = Joi.object({
         optional(),
     
     released_on: Joi.number().
-        min(1500).
+        min(1901).
         optional(),
 
     path_featured_picture: Joi.any().
