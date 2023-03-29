@@ -19,13 +19,17 @@ export const playlistSchema = Joi.object({
         min(1500).
         optional(),
 
-    featured_picture: Joi.any().
+    path_featured_picture: Joi.any().
         optional(),
 
     tags: Joi.array().items(
-            Joi.string().
-                min(2).
-                max(20)
+            Joi.object({
+                name: Joi.string().
+                    min(2).
+                    max(20),
+
+                type: Joi.string().allow("genre", "artist", "feature")
+            })
         ).
         min(1).
         required()
