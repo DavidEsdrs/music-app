@@ -14,7 +14,7 @@ import { SongPlaylist } from "./entities/SongPlaylist";
 import { SongUser } from "./entities/SongUser";
 import { createRefreshTokenTable1678476984531 } from "./migrations/1678476984531-create_refresh_token_table";
 import { RefreshToken } from "./entities/RefreshToken";
-import { Tag } from "./entities/Tag";
+import { TagPlaylist, TagSong } from "./entities/Tag";
 import { createTagsTable1678890947949 } from "./migrations/1678890947949-create_tags_table";
 
 dotenv.config({
@@ -32,7 +32,8 @@ const AppDataSource = new DataSource({
         SongPlaylist,
         SongUser,
         RefreshToken,
-        Tag
+        TagPlaylist, 
+        TagSong
     ],
     migrations: [
         createUsersTable1676253240773,
