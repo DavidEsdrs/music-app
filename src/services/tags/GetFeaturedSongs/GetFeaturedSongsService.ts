@@ -14,19 +14,32 @@ export class GetFeaturedSongsService {
     async execute({ song_id }: IGetFeaturedSongsDTO) {
         const songTags = await this.tagsRepository.getTagsFromSong(song_id);
         const tagsUsageCount = await this.tagsRepository.countTagByUsage(songTags);
-        const mostUsedTag = tagsUsageCount.reduce((p, c) => c.tag_type === "genre" ? c : c.quantity > p.quantity ? c : p);
+        const mostUsedTag = tagsUsageCount.reduce((mostUsed, current) =>
+            current.tag_type === "genre" && current.quantity > mostUsed.quantity ? current : mostUsed
+        );
         const relatedByMostUsedTag = await this.tagsRepository.findSongAndPlaylistByTags([mostUsedTag.name], 10);
         const obj = this.removeDuplicates(relatedByMostUsedTag);
         return cleanObj(obj) as TagSongOrPlaylist;
     }
 
-    removeDuplicates(relatedByMostUsedTag: TagSongOrPlaylist) {
-        const obj: TagSongOrPlaylist = {
+    removeDuplicates(songsAndPlaylists: TagSongOrPlaylist) {
+        const uniqueSongsAndPlaylists: TagSongOrPlaylist = {
             songs: [],
             playlists: []
         };
-        relatedByMostUsedTag.songs.forEach(song => !obj.songs.find(us => us.song_idSong === song.song_idSong) && obj.songs.push(song));
-        relatedByMostUsedTag.playlists.forEach(playlist => !obj.playlists.find(up => up.playlist_idPlaylist === playlist.playlist_idPlaylist) && obj.playlists.push(playlist));
-        return obj;
+        
+        songsAndPlaylists.songs.forEach((song) => {
+            if (!uniqueSongsAndPlaylists.songs.some((s) => s.song_idSong === song.song_idSong)) {
+              uniqueSongsAndPlaylists.songs.push(song);
+            }
+        });
+      
+        songsAndPlaylists.playlists.forEach((playlist) => {
+            if (!uniqueSongsAndPlaylists.playlists.some((p) => p.playlist_idPlaylist === playlist.playlist_idPlaylist)) {
+                uniqueSongsAndPlaylists.playlists.push(playlist);
+            }
+        });
+
+        return uniqueSongsAndPlaylists;
     }
 }
