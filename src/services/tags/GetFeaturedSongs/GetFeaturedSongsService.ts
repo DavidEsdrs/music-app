@@ -14,7 +14,7 @@ export class GetFeaturedSongsService {
     async execute({ song_id }: IGetFeaturedSongsDTO) {
         const songTags = await this.tagsRepository.getTagsFromSong(song_id);
         const tagsUsageCount = await this.tagsRepository.countTagByUsage(songTags);
-        const mostUsedTag = tagsUsageCount.reduce((p, c) => c.quantity > p.quantity ? c : c.tag_type === "genre" ? c : p);
+        const mostUsedTag = tagsUsageCount.reduce((p, c) => c.tag_type === "genre" ? c : c.quantity > p.quantity ? c : p);
         const relatedByMostUsedTag = await this.tagsRepository.findSongAndPlaylistByTags([mostUsedTag.name], 10);
         const obj = this.removeDuplicates(relatedByMostUsedTag);
         return cleanObj(obj) as TagSongOrPlaylist;
