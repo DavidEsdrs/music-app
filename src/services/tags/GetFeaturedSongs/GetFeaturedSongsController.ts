@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { SongAndPlaylist } from "../../../repositories/TagRepository";
+import { SongAndPlaylist, TagSongOrPlaylist } from "../../../repositories/TagRepository";
 import { IGetFeaturedSongsDTO } from "./GetFeaturedSongsDTO";
 
 interface IGetFeaturedSongsService {
-    execute(args: IGetFeaturedSongsDTO): Promise<SongAndPlaylist>;
+    execute(args: IGetFeaturedSongsDTO): Promise<TagSongOrPlaylist>;
 }
 
 export class GetFeaturedSongsController {
