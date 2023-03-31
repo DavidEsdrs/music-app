@@ -64,7 +64,7 @@ export class DuplicateSongEntryError extends APIErrors {
 
 export class DefaultPlaylistDeleteError extends APIErrors {
     constructor() {
-        super(422, "Can't delete default playlist!");
+        super(409, "Can't delete default playlist!");
     }
 }
 
