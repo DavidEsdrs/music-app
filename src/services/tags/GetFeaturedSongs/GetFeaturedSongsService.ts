@@ -1,6 +1,3 @@
-import { Playlist } from "../../../entities/Playlist";
-import { Song } from "../../../entities/Song";
-import { TagSong } from "../../../entities/Tag";
 import { ITagSongRepository, SongAndPlaylist } from "../../../repositories/TagRepository";
 import { TagSongOrPlaylist } from "../../../repositories/typeorm/mysql/TypeormTagRepository";
 import { cleanObj } from "../../../utils/cleanObj";
@@ -18,8 +15,8 @@ export class GetFeaturedSongsService {
             current.tag_type === "genre" && current.quantity > mostUsed.quantity ? current : mostUsed
         );
         const relatedByMostUsedTag = await this.tagsRepository.findSongAndPlaylistByTags([mostUsedTag.name], 10);
-        const obj = this.removeDuplicates(relatedByMostUsedTag);
-        return cleanObj(obj) as TagSongOrPlaylist;
+        const uniqueSongsAndPlaylists  = this.removeDuplicates(relatedByMostUsedTag);
+        return cleanObj(uniqueSongsAndPlaylists) as TagSongOrPlaylist;
     }
 
     removeDuplicates(songsAndPlaylists: TagSongOrPlaylist) {
