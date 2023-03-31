@@ -9,11 +9,11 @@ interface IPayload {
 export const ensureAuthUser = (req: Request, res: Response, next: NextFunction) => {
     const auth = req.headers.authorization;
     if(!auth) {
-        throw new UnauthorizedRequestError();
+        throw new UnauthorizedRequestError("No auth token was found!");
     }
     const [ , token ] = auth.split(' ');
     if(!token) {
-        throw new UnauthorizedRequestError();
+        throw new UnauthorizedRequestError("The JWT token wasn't found in the given auth token!");
     }
     try {
         const { sub } = verify(token, process.env.ACCESS_TOKEN_SECRET, { ignoreExpiration: false }) as IPayload;
