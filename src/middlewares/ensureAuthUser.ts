@@ -21,6 +21,6 @@ export const ensureAuthUser = (req: Request, res: Response, next: NextFunction) 
         return next();
     }
     catch(error) {
-        throw new ForbiddenRequestError();
+        throw new UnauthorizedRequestError("The JWT has expired!");
     }
 }
