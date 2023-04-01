@@ -4,7 +4,8 @@ import { APIErrors } from "../api/APIErrors";
 export const errorHandling = (err: APIErrors, req: Request, res: Response, next: NextFunction) => {
     if(err instanceof APIErrors) {
         return res.status(err.status).json({
-            error: err.message
+            error: err.message,
+            status_code: err.status
         });
     }
 
