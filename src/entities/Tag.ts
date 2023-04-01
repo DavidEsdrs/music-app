@@ -11,8 +11,8 @@ export class TagSong {
     @Column({ name: "song_id", type: "integer" })
     song_id: number;
 
-    @Column({ name: "type", type: "enum", enum: ["feature", "genre", "artist"] })
-    type: "feature" | "genre" | "artist";
+    @Column({ name: "tag_type", type: "enum", enum: ["feature", "genre", "artist"] })
+    tag_type: "feature" | "genre" | "artist";
 
     @CreateDateColumn()
     created_at: Date;
@@ -32,8 +32,8 @@ export class TagPlaylist {
     @Column({ name: "playlist_id", type: "integer" })
     playlist_id: number;
 
-    @Column({ name: "type", type: "enum", enum: ["feature", "genre", "artist"] })
-    type: "feature" | "genre" | "artist";
+    @Column({ name: "tag_type", type: "enum", enum: ["feature", "genre", "artist"] })
+    tag_type: "feature" | "genre" | "artist";
 
     @CreateDateColumn()
     created_at: Date;
