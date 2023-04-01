@@ -33,8 +33,8 @@ export class UnprocessableEntityError extends APIErrors {
 }
 
 export class UnauthorizedRequestError extends APIErrors {
-    constructor() {
-        super(401, "Access denied! You need to be authorized to perform this action!");
+    constructor(message?: string) {
+        super(401, message || "Access denied! You need to be authorized to perform this action!");
     }
 }
 
