@@ -1,6 +1,6 @@
 import { Playlist } from "../entities/Playlist";
 import { Song } from "../entities/Song";
-import { TagPlaylist } from "../entities/Tag";
+import { TagPlaylist, TagSong } from "../entities/Tag";
 import { GenericRepository } from "./GenericRepository";
 
 export type SongAndPlaylist = {
@@ -30,10 +30,16 @@ export interface TagSongOrPlaylist {
 
 type TagCount = TagPlaylist & { quantity: number; };
 
-export interface ITagRepository extends GenericRepository<TagPlaylist> {
+export interface ITagPlaylistRepository extends GenericRepository<TagPlaylist> {
     findByName(name: string): Promise<TagPlaylist>;
-    findSongAndPlaylistByTag(tag: string, limit: number): Promise<SongAndPlaylist>;
     findSongAndPlaylistByTags(tags: string[], limit: number): Promise<TagSongOrPlaylist>;
     getTagsFromSong(song_id: number): Promise<TagPlaylist[]>;
     countTagByUsage(tags: TagPlaylist[]): Promise<TagCount[]>;
+}
+
+export interface ITagSongRepository extends GenericRepository<TagSong> {
+    findByName(name: string): Promise<TagSong>;
+    findSongAndPlaylistByTags(tags: string[], limit: number): Promise<TagSongOrPlaylist>;
+    getTagsFromSong(song_id: number): Promise<TagSong[]>;
+    countTagByUsage(tags: TagSong[]): Promise<TagCount[]>;
 }
