@@ -20,7 +20,7 @@
     - JsonWebToken;
     - Multer;
 
-# API Docs
+## API Docs
 After setting up everything, you can find the API documentation by accessing [https://localhost:3000/api/docs](https://localhost:3000/api/docs).
 
 ## Getting started
