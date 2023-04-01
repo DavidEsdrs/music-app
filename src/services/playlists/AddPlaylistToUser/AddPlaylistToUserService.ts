@@ -15,7 +15,7 @@ export class AddPlaylistToUserService {
         
         /* Check wether the playlist is public or not */
         if(playlist.creator_fk !== args.user_id && playlist.visibility !== "public") {
-            throw new UnauthorizedRequestError();
+            throw new UnauthorizedRequestError("Unauthorized access to the requested playlist. The playlist is either not public or the user is not the owner.");
         }
 
         /* Creates a copy from the playlist that the user want to added to his playlist list  */
