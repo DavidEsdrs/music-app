@@ -140,9 +140,12 @@
                                     "$ref": "#/components/schemas/user"
                                 },
                                 {
-                                    "accessToken": {
-                                        "type": "string",
-                                        "description": "The new access token"
+                                    "type": "object",
+                                    "properties": {
+                                        "accessToken": {
+                                            "type": "string",
+                                            "description": "The new access token"
+                                        }
                                     }
                                 }
                             ]
@@ -160,6 +163,406 @@
                     "204": {
                         "summary": "Successful operation",
                         "description": "The server successfully removed the refresh token cookie from the client"
+                    }
+                }
+            }
+        },
+        "/playlist": {
+            "post": {
+                "summary": "Create a new playlist",
+                "description": "This route allow create a new playlist",
+                "security": [{"bearerAuth": []}],
+                "tags": ["playlists"],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/playlist"
+                                    },
+                                    {
+                                        "type": "object",
+                                        "properties": {
+                                            "tags": {
+                                                "type": "array",
+                                                "minItems": 1,
+                                                "items": {
+                                                    "$ref": "#/components/schemas/tag"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "summary": "Successful operation",
+                        "description": "The playlist was created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "allOf": [
+                                        {
+                                            "$ref": "#/components/schemas/playlist"
+                                        },
+                                        {
+                                            "type": "object",
+                                            "properties": {
+                                                "tags": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/tag"
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                    ]
+
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "summary": "Operation failed",
+                        "description": "The given credentials is invalid",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "error": {
+                                    "type": "string",
+                                    "description": "Describes the error as clear as possible"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "summary": "Unprocessable Entity",
+                        "description": "Unprocessable Entity. The request was well-formed but was unable to be followed due to semantic errors in the request body.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/responseEntity"
+                                },
+                                "examples": {
+                                    "user": {
+                                        "value": {
+                                            "message": "\"tags\" is required"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/playlist/{playlistId}": {
+            "get": {
+                "summary": "Playlist information",
+                "description": "This route allows the client to get information of the given playlist id",
+                "tags": ["playlists"],
+                "security": [{"bearerAuth": []}],
+                "parameters": [
+                    {
+                        "name": "playlistId",
+                        "in": "path",
+                        "description": "Id of the playlist to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "summary": "Successful operation",
+                        "description": "The information was retrieved successfully",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/components/schemas/playlist"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "songs_url": {
+                                            "type": "string",
+                                            "summary": "URL to get the songs of the playlist",
+                                            "description": "This variable holds the URL to get all the songs inside the playlist"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "404": {
+                        "summary": "Playlist not found",
+                        "description": "The wanted resource wasn't found in the database, the response will be always the same",
+                        "schema": {
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "error": {
+                                                "type": "string",
+                                                "example": "Playlist not found!"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "Update Playlist",
+                "description": "This route allows the client to update a given playlist",
+                "tags": ["playlists"],
+                "security": [{"bearerAuth": []}],
+                "parameters": [
+                    {
+                        "name": "playlistId",
+                        "in": "path",
+                        "description": "Id of the playlist to return",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 1
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/playlist"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "summary": "Successful operation",
+                        "description": "The playlist was successfully updated",
+                        "schema": {
+                            "$ref": "#/components/schemas/responseEntity"
+                        }
+                    },
+                    "404": {
+                        "summary": "Playlist not found",
+                        "description": "The wanted resource wasn't found in the database, the response will be always the same",
+                        "schema": {
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "error": {
+                                                "type": "string",
+                                                "example": "Playlist not found!"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete a playlist",
+                "description": "This route allows to delete a playlist by its ID. Only the playlist owner can delete the playlist.",
+                "security": [{"bearerAuth": []}],
+                "parameters": [
+                    {
+                        "name": "playlistId",
+                        "in": "path",
+                        "required": true,
+                        "description": "The ID of the playlist to be deleted."
+                    }
+                ],
+                "tags": ["playlists"],
+                "responses": {
+                    "200": {
+                        "description": "Playlist deleted successfully.",
+                        "schema": {
+                            "$ref": "#/components/schemas/responseEntity"
+                        }
+                    },
+                    "409": {
+                        "summary": "Unprocessable Enitity",
+                        "description": "The user is trying to delete its default playlist, it isn't able to delete its default playlist since it holds all the uploaded songs by the user. In this case, resend the request as it is won't work and the user must change the request",
+                        "schema": {
+                            "error": "Can't delete default playlist!",
+                            "status_code": 409
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found - The playlist with the specified ID does not exist.",
+                        "schema": {
+                            "error": "Song not found!",
+                            "status_code": 404
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{userId}/playlist": {
+            "get": {
+                "summary": "Playlists from a user",
+                "description": "This endpoint retrieves a list of all playlists that have been created by a user, with the option to retrieve both public and private playlists. If the requester's user ID matches the ID specified in the URL, then all of the user's playlists, including private ones, will be returned. Note that only public playlists can be accessed by users other than the playlist owner.",
+                "tags": ["playlists"],
+                "security": [{"bearerAuth": []}],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The ID of the user whose playlists will be retrieved",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of playlists created by the user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/playlist"
+                                    }
+                                },
+                                "example": [
+                                    {
+                                        "idPlaylist": 1,
+                                        "idUser": 1,
+                                        "title": "UPLOADED_SONGS",
+                                        "path_featured_picture": null,
+                                        "visibility": "private",
+                                        "description": "Songs upload by user 1",
+                                        "released_on": 2023,
+                                        "created_at": "2023-03-28T19:48:25.000Z",
+                                        "updated_at": "2023-03-28T19:48:25.000Z",
+                                        "creator_fk": 1,
+                                        "username": "dav",
+                                        "songs_url": "https://local.host.br:3000/api/playlist/1/song",
+                                        "playlist_url": "https://local.host.br:3000/api/playlist/1"
+                                    },
+                                    {
+                                        "idPlaylist": 5,
+                                        "idUser": 1,
+                                        "title": "The Dark Side Of The Moon",
+                                        "path_featured_picture": null,
+                                        "visibility": "private",
+                                        "description": "The most famous Pink Floyd album",
+                                        "released_on": 1977,
+                                        "created_at": "2023-03-30T04:48:22.000Z",
+                                        "updated_at": "2023-03-30T04:48:22.000Z",
+                                        "creator_fk": 1,
+                                        "username": "dav",
+                                        "songs_url": "https://local.host.br:3000/api/playlist/5/song",
+                                        "playlist_url": "https://local.host.br:3000/api/playlist/5"
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The provided user ID is invalid",
+                        "schema": {
+                            "content": {
+                                "$ref": "#/components/schemas/responseEntity"
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "The requester is not authorized to access this user's private playlists",
+                        "schema": {
+                            "content": {
+                                "$ref": "#/components/schemas/responseEntity"
+                            }
+                        },
+                        "example":  {
+                            "error": "Access denied! You need to be authorized to perform this action!"
+                        }
+                    },
+                    "404": {
+                        "description": "No playlists were found for the provided user ID",
+                        "schema": {
+                            "content": {
+                                "$ref": "#/components/schemas/responseEntity"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user/playlist/{playlistId}": {
+            "post": {
+                "summary": "Add playlist to user",
+                "description": "This endpoint allows users to add playlists to their list. When this action is performed, the desired playlist is duplicated with the 'creator_fk' changed to match the 'requester_id'. This does not violate the application's terms, as all public playlists are considered to be accessible to any user who wants to consume them.",
+                "tags": ["playlists"],
+                "security": [{"bearerAuth": []}],
+                "parameters": [
+                    {
+                        "name": "playlistId",
+                        "in": "path",
+                        "description": "The ID of the playlist to be added to the user's list.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "summary": "Successful operation",
+                        "description": "The playlist was successfully duplicated and added to the user's playlist list",
+                        "schema": {
+                            "$ref": "#/components/schemas/responseEntity"
+                        },
+                        "example": {
+                            "updated": {
+                                "$ref": "#/components/schemas/playlist"
+                            },
+                            "message": "Playlist 5 added to user 1 as 6",
+                            "status_code": 200
+                        }
+                    },
+                    "401": {
+                        "summary": "Authorization Error",
+                        "description": "Authentication failed when attempting to process the request. This error may be due to an expired or missing JWT token, or the user is attempting to add a playlist that is not public or does not belong to them. The response message will indicate the specific reason for the error.",
+                        "examples": {
+                            "missingToken": {
+                                "value": {
+                                    "error": "No JWT token was found in the request headers!",
+                                    "status_code": 401
+                                }
+                            },
+                            "expiredToken": {
+                                "value": {
+                                    "error": "The JWT token has expired!",
+                                    "status_code": 401
+                                }
+                            },
+                            "playlistAccessError": {
+                                "value": {
+                                    "error": "Unauthorized access to the requested playlist. The playlist is either not public or the user is not the owner.",
+                                    "status_code": 401
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -213,6 +616,116 @@
                         "type": "string",
                         "format": "date-time",
                         "readOnly": true
+                    }
+                }
+            },
+            "playlist": {
+                "type": "object",
+                "properties": {
+                    "idPlaylist": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "A title for the playlist",
+                        "example": "The Dark Side Of The Moon",
+                        "minLength": 3,
+                        "maxLength": 50
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "An playlist description",
+                        "maxLength": 255,
+                        "example": "The most famous Pink Floyd album"
+                    },
+                    "path_featured_picture": {
+                        "type": "string",
+                        "description": "Holds the path of the playlist featured image",
+                        "readOnly": true
+                    },
+                    "visibility": {
+                        "type": "string",
+                        "description": "The visibility of the playlist",
+                        "enum": ["private", "public"]
+                    },
+                    "released_on": {
+                        "type": "integer",
+                        "description": "Represents the year that the playlist/album was/will be launched",
+                        "minimum": 1901
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            },
+            "tag": {
+                "type": "object",
+                "properties": {
+                    "idTag": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "summary": "The name of the tag",
+                        "description": "The name of the tag, is recommended to be in lowercase, but if the name describes an artist or anything that should be in any case, it is allowed to be in the case wanted to",
+                        "example": "rock",
+                        "minLength": 3,
+                        "maxLength": 50
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "The type of the tag, used for searching by tags within specific types",
+                        "enum": {
+                            "genre": {
+                                "description": "This type is used when the tag name stand for a musical genre"
+                            },
+                            "feature": {
+                                "description": "This type is used when the tag name stand for a feature of the song, such as if the tag name describes a instrumental used in the song, the tag should be of type 'feature', or if the tag describes a mood (happy, sad, relaxing) it also should be of type feature"
+                            },
+                            "artist": {
+                                "description": "This type is used when the tag name is for a specific artist, such as Eminem or Seu Jorge"
+                            }
+                        },
+                        "example": "genre"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            },
+            "responseEntity": {
+                "type": "object",
+                "summary": "Response Entity",
+                "description": "This entity is retrieved only, and only when PUT and DELETE requests succeeds and holds useful information about the operation made. If the operation fails, the server will retrieve the default error entity",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "summary": "Success message",
+                        "description": "Holds information about the operation made",
+                        "example": "Entity with id 4 successfully updated"
+                    },
+                    "status_code": {
+                        "type": "number",
+                        "format": "int32",
+                        "summary": "Success Status code",
+                        "description": "Holds the appropriate status code of the  operation",
+                        "example": 200
                     }
                 }
             }
