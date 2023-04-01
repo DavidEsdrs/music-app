@@ -48,4 +48,4 @@ const playlistPictureUpload = {
 
 }
 
-export const validateAndParsePlaylistPictureUpload = multer(playlistPictureUpload.getConfig()).single("featured_picture");
+export const validateAndParsePlaylistPictureUpload = multer(playlistPictureUpload.getConfig()).single("path_featured_picture");
