@@ -9,7 +9,7 @@ interface IPayload {
 export const ensureAuthUser = (req: Request, res: Response, next: NextFunction) => {
     const auth = req.headers.authorization;
     if(!auth) {
-        throw new UnauthorizedRequestError("No auth token was found!");
+        throw new UnauthorizedRequestError("No JWT token was found in the request headers");
     }
     const [ , token ] = auth.split(' ');
     if(!token) {
