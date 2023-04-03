@@ -1,4 +1,4 @@
-import { PlaylistsNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
+import { ForbiddenRequestError, PlaylistsNotFoundError } from "../../../api/APIErrors";
 import { ResponseEntity } from "../../../api/ResponseEntity";
 import { Playlist } from "../../../entities/Playlist";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
@@ -15,7 +15,7 @@ export class RemoveSongFromPlaylist {
             throw new PlaylistsNotFoundError();
         }
         if(!this.isRequesterCreator(playlist.creator_fk, user_id)) {
-            throw new UnauthorizedRequestError();
+            throw new ForbiddenRequestError();
         }
         await this.playlistsRepository.removeSongFromPlaylist(song_id,playlist_id);
         const result = new ResponseEntity<Playlist>("Song " + song_id + " removed from playlist " + playlist_id, 200);
