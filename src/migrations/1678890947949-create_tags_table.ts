@@ -11,7 +11,9 @@ export class createTagsTable1678890947949 implements MigrationInterface {
                 tag_type ENUM("genre", "feature", "artist") NOT NULL DEFAULT "feature",
                 created_at DATETIME DEFAULT NOW(),
                 updated_at DATETIME DEFAULT NOW(),
-                FOREIGN KEY (song_id) REFERENCES songs(idSong)
+                FOREIGN KEY (song_id) 
+                    REFERENCES songs(idSong)
+                    ON DELETE CASCADE
             );
         `);
 
@@ -23,7 +25,9 @@ export class createTagsTable1678890947949 implements MigrationInterface {
                 tag_type ENUM("genre", "feature", "artist") NOT NULL DEFAULT "feature",
                 created_at DATETIME DEFAULT NOW(),
                 updated_at DATETIME DEFAULT NOW(),
-                FOREIGN KEY (playlist_id) REFERENCES playlists(idPlaylist)
+                FOREIGN KEY (playlist_id) 
+                    REFERENCES playlists(idPlaylist)
+                    ON DELETE CASCADE
             );    
         `);
     }
