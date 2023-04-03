@@ -1,3 +1,4 @@
+import path from "path";
 import { Playlist } from "../entities/Playlist";
 import { Song } from "../entities/Song";
 import { User } from "../entities/User";
@@ -17,7 +18,7 @@ export const fulfillUser = (user: User) => ({
 }) as User;
 
 export const fulfillSong = async (song: Song, fileHandling: FileHandling) => { 
-    const duration = await fileHandling.getSongDuration(fileHandling.getPath(song.file_path));
+    const duration = await fileHandling.getSongDuration(path.resolve(__dirname, "..", "..", "uploads", "songs", song.file_path));
 
     return {
         ...song, 
