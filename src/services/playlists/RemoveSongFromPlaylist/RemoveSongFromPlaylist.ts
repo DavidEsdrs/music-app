@@ -1,4 +1,4 @@
-import { UnauthorizedRequestError } from "../../../api/APIErrors";
+import { PlaylistsNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
 import { ResponseEntity } from "../../../api/ResponseEntity";
 import { Playlist } from "../../../entities/Playlist";
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
@@ -11,7 +11,10 @@ export class RemoveSongFromPlaylist {
 
     async execute({ song_id, playlist_id, user_id }: IRemoveSongFromPlaylistDTO) {
         const playlist = await this.playlistsRepository.findById(playlist_id);
-        if(!playlist || !this.isRequesterCreator(playlist.creator_fk, user_id)) {
+        if(!playlist) {
+            throw new PlaylistsNotFoundError();
+        }
+        if(!this.isRequesterCreator(playlist.creator_fk, user_id)) {
             throw new UnauthorizedRequestError();
         }
         await this.playlistsRepository.removeSongFromPlaylist(song_id,playlist_id);
