@@ -33,8 +33,6 @@ const songFileUpload = {
         return (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
             const type = mime.getExtension(file.mimetype);
             const conditions = [ "mpga" ];
-            const { error } = createSongSchema.validate(req.body);
-            if(error) return cb(error);
             if(!conditions.includes(type)) {
                 return cb(new UnprocessableEntityError("The file type is invalid!"));
             }
