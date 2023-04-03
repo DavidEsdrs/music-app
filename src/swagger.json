@@ -566,6 +566,176 @@
                     }
                 }
             }
+        },
+        "/playlist/{playlistId}/song/{songId}": {
+            "delete": {
+                "summary": "Remove song from a playlist",
+                "description": "This endpoint allows the user to delete a given song from a given playlist. An user can only perform this action if it is the owner of the playlist.",
+                "security": [{"bearerAuth": []}],
+                "tags": ["playlists", "songs"],
+                "parameters": [
+                    {
+                        "name": "playlistId",
+                        "in": "path",
+                        "description": "The playlist ID from which the user wants to remove a song.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "songId",
+                        "in": "path",
+                        "description": "The ID of the song that the user wants to remove from the playlist with the playlistId.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {},
+                    "404": {
+                        "summary": "Playlist not found",
+                        "description": "The given playlist id doesn't exists in the database",
+                        "schema": {
+                            "error": "Playlist not found!",
+                            "status_code": 404
+                        }
+                    },
+                    "401": {
+                        "summary": "Authentication Error",
+                        "description": "Authentication failed when attempting to process the request. This error may be due to an expired or missing JWT token, or the user is attempting to add a playlist that is not public or does not belong to them. The response message will indicate the specific reason for the error.",
+                        "examples": {
+                            "missingToken": {
+                                "value": {
+                                    "error": "No JWT token was found in the request headers!",
+                                    "status_code": 401
+                                }
+                            },
+                            "expiredToken": {
+                                "value": {
+                                    "error": "The JWT token has expired!",
+                                    "status_code": 401
+                                }
+                            },
+                            "playlistAccessError": {
+                                "value": {
+                                    "error": "Unauthorized access to the requested playlist. The playlist is either not public or the user is not the owner.",
+                                    "status_code": 401
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/songs": {
+            "post": {
+                "summary": "Upload a new song",
+                "description": "This endpoint allows users to upload a new song in MP3 format along with information about the song.",
+                "tags": ["songs"],
+                "security": [{"bearerAuth": []}],
+                "consumes": ["multipart/form-data"],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "song_file": {
+                                        "description": "The MP3 file to be uploaded",
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "title": {
+                                        "description": "The title of the song",
+                                        "type": "string",
+                                        "example": "Time"
+                                    },
+                                    "tags": {
+                                        "description": "The tags wich the song belongs to",
+                                        "type": "array",
+                                        "minItems": 1,
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string",
+                                                    "minLength": 3,
+                                                    "maxLength": 30
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "enum": {
+                                                        "genre": {
+                                                            "description": "Used when the name of the tag indicates a music genre."
+                                                        },
+                                                        "feature": {
+                                                            "description": "The \"feature\" tags are used to indicate specific information about a song, such as the decade it belongs to, the mood or sentiment it conveys, or the instrumental elements it contains. These tags are useful for categorizing songs more precisely and enabling users to find music that matches their preferences more efficiently."
+                                                        },
+                                                        "artist": {
+                                                            "description": "Used when the name of the tag indicates an artist."
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "examples": {
+                                            "musicGenre": {
+                                                "value": {
+                                                    "name": "rock",
+                                                    "type": "genre"
+                                                }
+                                            },
+                                            "musicFeature": {
+                                                "value": {
+                                                    "name": "happy",
+                                                    "type": "feature"
+                                                }
+                                            },
+                                            "musicArtist": {
+                                                "value": {
+                                                    "name": "Pink Floyd",
+                                                    "type": "artist"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "required": ["song_file", "title", "tags"]
+                            },
+                            "encoding": {
+                                "tags": {
+                                    "contentType": "application/json"
+                                },
+                                "title": {
+                                    "contentType": "application/json"
+                                },
+                                "song_file": {
+                                    "contentType": "audio/mpeg"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Song successfully uploaded"
+                    },
+                    "400": {
+                        "description": "Bad request. Check the request parameters."
+                    },
+                    "401": {
+                        "description": "Unauthorized. The user is not authenticated."
+                    },
+                    "500": {
+                        "description": "Internal server error. Something went wrong on the server side."
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -675,27 +845,22 @@
                     },
                     "name": {
                         "type": "string",
-                        "summary": "The name of the tag",
-                        "description": "The name of the tag, is recommended to be in lowercase, but if the name describes an artist or anything that should be in any case, it is allowed to be in the case wanted to",
-                        "example": "rock",
                         "minLength": 3,
-                        "maxLength": 50
+                        "maxLength": 30
                     },
                     "type": {
                         "type": "string",
-                        "description": "The type of the tag, used for searching by tags within specific types",
                         "enum": {
                             "genre": {
-                                "description": "This type is used when the tag name stand for a musical genre"
+                                "description": "Used when the name of the tag indicates a music genre."
                             },
                             "feature": {
-                                "description": "This type is used when the tag name stand for a feature of the song, such as if the tag name describes a instrumental used in the song, the tag should be of type 'feature', or if the tag describes a mood (happy, sad, relaxing) it also should be of type feature"
+                                "description": "The \"feature\" tags are used to indicate specific information about a song, such as the decade it belongs to, the mood or sentiment it conveys, or the instrumental elements it contains. These tags are useful for categorizing songs more precisely and enabling users to find music that matches their preferences more efficiently."
                             },
                             "artist": {
-                                "description": "This type is used when the tag name is for a specific artist, such as Eminem or Seu Jorge"
+                                "description": "Used when the name of the tag indicates an artist."
                             }
-                        },
-                        "example": "genre"
+                        }
                     },
                     "created_at": {
                         "type": "string",
@@ -709,9 +874,47 @@
                     }
                 }
             },
+            "song": {
+                "type": "object",
+                "description": "This entity represents the songs saved by the user and holds useful information about each song, such as title, creation date, creator user and so on.",
+                "properties": {
+                    "idSong": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "summary": "The name of the song",
+                        "description": "It is recommended that the tag name be in lowercase. However, if the name describes an artist or anything else that should be capitalized, it is allowed to be written in the desired case.",
+                        "example": "Time",
+                        "minLength": 3,
+                        "maxLength": 50
+                    },
+                    "file_path": {
+                        "type": "string",
+                        "description": "The file path of the song in the file system. It holds the timestamp which the song was saved, plus the type of the file, such as mp3.",
+                        "readOnly": true,
+                        "example": "1679604684826.mp3"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "creator_fk": {
+                        "type": "string",
+                        "description": "Holds the user foreign key.",
+                        "readOnly": true
+                    }
+                }
+            },
             "responseEntity": {
                 "type": "object",
-                "summary": "Response Entity",
                 "description": "This entity is retrieved only, and only when PUT and DELETE requests succeeds and holds useful information about the operation made. If the operation fails, the server will retrieve the default error entity",
                 "properties": {
                     "message": {
@@ -726,6 +929,26 @@
                         "summary": "Success Status code",
                         "description": "Holds the appropriate status code of the  operation",
                         "example": 200
+                    }
+                },
+                "examples": {
+                    "missingToken": {
+                        "value": {
+                            "error": "No JWT token was found in the request headers!",
+                            "status_code": 401
+                        }
+                    },
+                    "expiredToken": {
+                        "value": {
+                            "error": "The JWT token has expired!",
+                            "status_code": 401
+                        }
+                    },
+                    "playlistAccessError": {
+                        "value": {
+                            "error": "Unauthorized access to the requested playlist. The playlist is either not public or the user is not the owner.",
+                            "status_code": 401
+                        }
                     }
                 }
             }
