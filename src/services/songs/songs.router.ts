@@ -12,12 +12,13 @@ import { getSongsFromPlaylistQuerySchema } from "./GetSongsFromPlaylist/getSongs
 import { validateBody, validateQuery } from "../../utils/validations";
 import { getSongSchema } from "./GetSong/getSong.middleware";
 import { createSongSchema } from "./CreateSong/CreateSong.middleware";
+import { parseJson } from "../../middlewares/parseJson.middleware";
 
 const router = Router();
 
 router.post("/playlist/:playlist/song/:song", ensureAuthUser, (req, res) => buildAddSongToPlaylist().handle(req, res));
 
-router.post("/songs", ensureAuthUser, validateAndParseSongFileUpload, (req, res) => buildCreateSong().handle(req, res));
+router.post("/songs", ensureAuthUser, validateAndParseSongFileUpload, parseJson, validateBody(createSongSchema), (req, res) => buildCreateSong().handle(req, res));
 
 router.get("/playlist/:id/song", ensureAuthUserSoft, query({ plainObjects: true }), validateQuery(getSongsFromPlaylistQuerySchema), (req, res) => buildGetSongsFromPlaylist().handle(req, res));
 
