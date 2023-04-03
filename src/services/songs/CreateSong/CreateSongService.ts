@@ -7,6 +7,11 @@ import { FileHandling } from "../../../utils/fileHandling/FileHandling";
 import { fulfillSong } from "../../../utils/fulfillInfo";
 import { IAddSongToPlaylistService } from "../../playlists/AddSongToPlaylist/AddSongToPlaylistController";
 import { ICreateSongDTO } from "./CreateSongDTO";
+import fs from "fs";
+import path from "path";
+import { promisify } from "util";
+
+const removeFile = promisify(fs.unlink);
 
 export class CreateSongService {
     constructor(
@@ -16,17 +21,29 @@ export class CreateSongService {
     ) {}
 
     async execute({ title, file_path, creator_fk, tags }: ICreateSongDTO) {
-        const song = this.songsRepository.create({ title, creator_fk, file_path });
-        const songId = await this.songsRepository.saveSong(song);
-        const songInDb = await this.songsRepository.findById(songId);
-        const promises = tags.map(tag => this.saveTagPromise(JSON.parse(tag), songId));
-        const fulfilledSongPromise = fulfillSong(songInDb, this.fileHandling);
-        const [fulfilledSong, ...tagsInDb] = await Promise.all([fulfilledSongPromise, ...promises]);
-        const songsWithTags = {
-            ...fulfilledSong,
-            tags: tagsInDb
-        };
-        return songsWithTags as Song;
+        let songId: number;
+        try {
+            const song = this.songsRepository.create({ title, creator_fk, file_path });
+            songId = await this.songsRepository.saveSong(song);
+            const songInDb = await this.songsRepository.findById(songId);
+            const promises = tags.map(tag => this.saveTagPromise(tag, songId));
+            const tagsInDb = await Promise.all([...promises]);
+            const fulfilledSong = await fulfillSong(songInDb, this.fileHandling);
+            const songsWithTags = {
+                ...fulfilledSong,
+                tags: tagsInDb
+            };
+            return songsWithTags as Song;
+        }
+
+        catch(err) {
+            const filePath = path.resolve(__dirname, "..", "..", "..", "..", "uploads", "songs", file_path);
+            await removeFile(filePath);
+            if(songId) {
+                await this.songsRepository.deleteSong(songId);
+            }
+            throw err;
+        }
     }
 
     async saveTagPromise(tag: TagSong, song_id: number) {
