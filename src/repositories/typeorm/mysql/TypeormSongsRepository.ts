@@ -1,6 +1,5 @@
 import { EntityManager } from "typeorm";
 import { APIErrors, SongNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
-import { Playlist } from "../../../entities/Playlist";
 import { Song } from "../../../entities/Song";
 import AppDataSource from "../../../ormconfig";
 import { SongJoin } from "../../SongsRepository";
@@ -14,7 +13,7 @@ export const songsRepository = AppDataSource.getRepository(Song).extend({
             INNER JOIN users u ON su.user_id=u.idUser
             WHERE s.idSong=?
         `, [idSong]);
-        return song;
+        return song[0];
     },
 
     async saveRelationUserSong(user_id: number, song_id: number) {
