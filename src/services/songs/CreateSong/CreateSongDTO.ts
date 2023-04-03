@@ -1,9 +1,8 @@
-import { Song } from "../../../entities/Song";
-import { Tag } from "../../../entities/Tag";
+import { TagSong } from "../../../entities/Tag";
 
 export interface ICreateSongDTO {
     title: string;
     file_path: string;
     creator_fk: number;
-    tags: string[];
+    tags: TagSong[];
 }
