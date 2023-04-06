@@ -1,4 +1,4 @@
-import { UnauthorizedRequestError } from "../../../api/APIErrors";
+import { ForbiddenRequestError, SongNotFoundError, UnauthorizedRequestError } from "../../../api/APIErrors";
 import { ISongsRepository } from "../../../repositories/SongsRepository";
 import { IDeleteSongDTO } from "./DeleteSongDTO";
 import { unlink } from "fs";
@@ -17,16 +17,15 @@ export class DeleteSongService {
     async execute({ song_id, user_id }: IDeleteSongDTO) {
         const song = await this.songsRepository.findById(song_id);
         if(!song) {
-            throw new UnauthorizedRequestError();
+            throw new SongNotFoundError();
         }
         if(song.creator_fk !== user_id) {
-            throw new UnauthorizedRequestError();
+            throw new ForbiddenRequestError();
         }
         const songsPath = path.resolve(__dirname, "..", "..", "..", "..", "uploads", "songs", song.file_path);
         await removeFile(songsPath);
         await this.songsRepository.deleteSong(song_id);
-        const result = new ResponseEntity<Song>(`Song ${song.idSong} deleted`, 200);
-        result.deleted = song;
+        const result = new ResponseEntity<Song>(`Song ${song.idSong} deleted`, 204);
         return result;
     }
 }
