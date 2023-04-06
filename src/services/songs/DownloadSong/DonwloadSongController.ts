@@ -15,6 +15,8 @@ export class DonwloadSongController {
         const { user_id } = req;
         const song_id = Number(req.params.song)
         const readStream = await this.service.execute({ song_id, user_id });
+        res.setHeader("Content-Type", "audio/mpeg");
+        res.setHeader("Content-Disposition", "attachment; filename=audio.mp3");
         readStream.pipe(res);
     }
 }
