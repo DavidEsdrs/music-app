@@ -1,4 +1,4 @@
-import { UnauthorizedRequestError } from "../../../api/APIErrors";
+import { ForbiddenRequestError, UnauthorizedRequestError } from "../../../api/APIErrors";
 import { Playlist } from "../../../entities/Playlist";
 import { Song } from "../../../entities/Song";
 import { User } from "../../../entities/User";
@@ -17,7 +17,7 @@ export class GetSongService {
     async execute({ song_id, user_id }: IGetSongDTO) {
         const song = await this.songsRepository.joinSongPublicPlaylists(song_id);
         if(!this.isRequesterCreator(song.creator_fk, user_id) && !isPublicSong(song.playlists)) {
-            throw new UnauthorizedRequestError();
+            throw new ForbiddenRequestError();
         }
         const playlists = this.getPlaylists(this.isRequesterCreator(song.creator_fk, user_id), song);
         const song_info = { ...song, playlists };
