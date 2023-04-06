@@ -6,14 +6,8 @@ import { SongJoin } from "../../SongsRepository";
 
 export const songsRepository = AppDataSource.getRepository(Song).extend({
     async findById(idSong: number) {
-        const song = await this.query(`
-            SELECT s.idSong, s.title song_title, s.file_path file_path, u.idUser, u.username
-            FROM songs s
-            INNER JOIN songs_users su ON s.idSong=su.song_id
-            INNER JOIN users u ON su.user_id=u.idUser
-            WHERE s.idSong=?
-        `, [idSong]);
-        return song[0];
+        const song = await this.findOneBy({ idSong });
+        return song;
     },
 
     async saveRelationUserSong(user_id: number, song_id: number) {
