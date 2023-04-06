@@ -18,6 +18,6 @@ export class DownloadPlaylistPictureController {
         if(readStream instanceof ReadStream)
             readStream.pipe(res);
         else
-            return res.json(null);
+            return res.sendStatus(204);
     }
 }
