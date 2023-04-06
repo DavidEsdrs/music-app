@@ -19,7 +19,7 @@ export const playlistSchema = Joi.object({
         min(1901).
         optional(),
 
-    path_featured_picture: Joi.any().
+    featured_picture: Joi.any().
         optional(),
 
     tags: Joi.array().items(
