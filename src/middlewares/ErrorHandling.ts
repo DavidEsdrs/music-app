@@ -13,5 +13,4 @@ export const errorHandling = (err: APIErrors, req: Request, res: Response, next:
         console.log(err);
         return res.status(500).json({ error: "Internal server error" });
     }
-    return next();
 }
