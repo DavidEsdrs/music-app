@@ -17,7 +17,6 @@
         "./src/@types/",
         "./node_modules/@types"
      ],
-     "sourceRoot": "./src/@types/",
      "noImplicitAny": true,
      "noImplicitThis": true,
      "resolveJsonModule": true
