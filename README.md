@@ -52,13 +52,17 @@ yarn
 > **Warning**: If you prefer run the database instance at localhost, the project Uses `MySql` as database, make sure to [install](https://dev.mysql.com/downloads/installer/) it before proceed. The project was developed with the mysql version `8.0.32` and uses [features only avaiable](https://dev.mysql.com/blog-archive/mysql-8-0-16-introducing-check-constraint/) in version `>=8.0.16`, to run the project properly, please install a mysql version higher than that;
 
 4.1. If you use the mysql instance, run the mysql cli or application and create a database to run the project;
+
 4.2. If you prefer run the database instance in a docker container, run:
+
 ```shell
 docker compose up -d
 ```
+
 This command run the container instance in background, if you want to check if the container is running, run `docker ps`, a mysql container must be running.
 
 5. Create a `.env.dev` file inside the root of the project:
+
 ```env
 DATABASE_URL="<YOUR DATABASE URL>"
 ACCESS_TOKEN_SECRET="<YOUR RANDOM ACCESS TOKEN SECRET>"
@@ -73,6 +77,7 @@ FRONT_END_URL=<FRONT END URL>
 > **Warning**: Make sure to set DATABASE_URL to your mysql instance url, if you are runnning the mysql container in docker, just set the url as "mysql://user:password@localhost:3333/music-app" (mysql://{user}:{password}@localhost:{port}/{database})
 
 6. Run the migrations to correctly set the tables:
+
 ```shell
 npm run migration:run
 OR
@@ -87,7 +92,9 @@ yarn dev
 ```
 
 > **Tip**: You can check the swagger api documentation at "http://localhost:4747/api/docs"
+
 > **Warning**: If you changed the SERVER_PORT variable in the dotenv example, make sure to go to `swagger.json` file inside `src` folder and change the `url` variable to the server port that you set
+
 ```json
 ...
 "servers": [
