@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "http://localhost:3737/api",
+            "url": "http://localhost:4747/api",
             "description": "API endpoint to production"
         }
     ],
