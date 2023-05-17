@@ -14,5 +14,9 @@ export const createUserSchema = Joi.object({
     password: Joi.
         string().
         min(5).
-        required()
+        required(),
+    
+    bio: Joi.
+        string().
+        max(255)
 });
