@@ -205,5 +205,9 @@ export const TypeormPlaylistsRepository = AppDataSource.getRepository(Playlist).
             await removeFile(file_path);
         }
         await this.update({ idPlaylist: playlist.idPlaylist }, { ...partial_playlist });
+    },
+
+    async updateFeaturedPicturePath(playlist_id: number, path_featured_picture: string) {
+        
     }
 });

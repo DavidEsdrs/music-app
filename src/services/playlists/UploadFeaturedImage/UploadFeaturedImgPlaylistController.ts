@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import { Playlist } from "../../../entities/Playlist";
 import { IUploadFeaturedImgPlaylistDTO } from "./UploadFeaturedImgPlaylistDTO";
+import { PartialPlaylist } from "../../../repositories/PlaylistsRepository";
 
 interface IUploadFeaturedImgPlaylistService {
-    execute(args: IUploadFeaturedImgPlaylistDTO): Promise<Playlist>;
+    execute(args: IUploadFeaturedImgPlaylistDTO): Promise<PartialPlaylist>;
 }
 
 export class UploadFeaturedImgPlaylistController {
