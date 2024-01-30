@@ -1,11 +1,11 @@
 import { IPlaylistsRepository } from "../../../repositories/PlaylistsRepository";
-import { ITagRepository, SongAndPlaylist } from "../../../repositories/TagRepository";
+import { ITagSongRepository, SongAndPlaylist } from "../../../repositories/TagRepository";
 import { ISearchByTagDTO } from "./SearchByTagDTO";
 import { cleanObj } from "../../../utils/cleanObj";
 
 export class SearchByTagService {
     constructor(
-        private tagsRepository: ITagRepository
+        private tagsRepository: ITagSongRepository
     ) {}
 
     async execute({ tag, user_id, limit = 20 }: ISearchByTagDTO) {
