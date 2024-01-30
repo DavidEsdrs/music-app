@@ -34,9 +34,9 @@
     "dev": "set NODE_ENV=dev&&tsx src/server.ts",
     "watch": "set NODE_ENV=dev&&tsx watch src/server.ts",
     "migration:create": "set NODE_ENV=dev&& node --require ts-node/register ./node_modules/typeorm/cli.js migration:create",
-    "migration:run": "set NODE_ENV=dev&& npx typeorm-ts-node-commonjs migration:run -d ./src/ormconfig.ts",
+    "migration:run": "set NODE_ENV=dev&& npx typeorm-ts-node-commonjs migration:run -d ./build/ormconfig.js",
     "migration:revert": "set NODE_ENV=dev&&node --require ts-node/register ./node_modules/typeorm/cli.js migration:revert",
-    "migrate:start:prod": "set NODE_ENV=dev&& npx typeorm-ts-node-commonjs migration:run -d ./src/ormconfig.ts && node ./build/server.js",
+    "migrate:start:prod": "set NODE_ENV=dev&& npx typeorm-ts-node-commonjs migration:run -d ./build/ormconfig.js && node ./build/server.js",
     "build": "set NODE_ENV=production&& tsc --target ES2020 --experimentalDecorators --emitDecoratorMetadata"
   }
 }
