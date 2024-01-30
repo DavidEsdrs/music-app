@@ -14,7 +14,7 @@ const playlistPictureUpload = {
         return multer.diskStorage({
             destination: (req, file, cb) => {
                 if(!fs.existsSync(playlistPictureUpload.URL)) {
-                    fs.mkdirSync(playlistPictureUpload.URL);
+                    fs.mkdirSync(playlistPictureUpload.URL + "/playlists", { recursive: true });;
                 }
                 cb(null, playlistPictureUpload.URL + "/playlists");
             },
