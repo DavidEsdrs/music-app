@@ -21,4 +21,5 @@ export interface IPlaylistsRepository extends GenericRepository<Playlist> {
     findFamousPlaylists(limit: number): Promise<Playlist[]>;
     removeSongFromPlaylist(song_id: number, playlist_id: number): Promise<void>;
     updatePlaylist(playlist: Playlist, partial_playlist: Partial<Playlist>): Promise<void>;
+    updateFeaturedPicturePath(playlist_id: number, path_featured_picture: string): Promise<void>;
 }

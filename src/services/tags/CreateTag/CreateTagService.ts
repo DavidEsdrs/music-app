@@ -1,15 +1,20 @@
 import { DuplicateTagError } from "../../../api/APIErrors";
-import { ITagRepository } from "../../../repositories/TagRepository";
+import { ITagSongRepository, ITagPlaylistRepository } from "../../../repositories/TagRepository";
 import { ICreateTagDTO } from "./CreateTagDTO";
 
 export class CreateTagService {
     constructor(
-        private tagRepository: ITagRepository
+        private tagPlaylistRepository: ITagPlaylistRepository,
+        private tagSongRepository: ITagSongRepository,
     ) {}
 
     async execute({ name, playlist_id, song_id }: ICreateTagDTO) {
-        const newTag = this.tagRepository.create({ name: name.trim().toLowerCase(), playlist_id, song_id });
-        await this.tagRepository.save(newTag);
-        return newTag;
+        const tagPlaylist = this.tagPlaylistRepository.create({ name: name.trim().toLowerCase(), playlist_id });
+        await this.tagPlaylistRepository.save(tagPlaylist);
+        
+        const tagSong = this.tagSongRepository.create({ name: name.trim().toLowerCase(), song_id })
+        await this.tagSongRepository.save(tagSong);
+
+        return { tag_playlist: tagPlaylist, tag_song: tagSong };
     }
 }
