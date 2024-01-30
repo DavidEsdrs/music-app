@@ -28,6 +28,11 @@ export interface TagSongOrPlaylist {
     playlists: TagPlaylistJoin[]
 }
 
+export interface SongsAndPlaylists { 
+    songs: TagSong[], 
+    playlists: TagPlaylist[]  
+}
+
 type TagCount = TagPlaylist & { quantity: number; };
 
 export interface ITagPlaylistRepository extends GenericRepository<TagPlaylist> {
@@ -39,8 +44,8 @@ export interface ITagPlaylistRepository extends GenericRepository<TagPlaylist> {
 
 export interface ITagSongRepository extends GenericRepository<TagSong> {
     findByName(name: string): Promise<TagSong>;
-    findSongAndPlaylistByTags(tags: string[], limit: number): Promise<{ songs: TagSong[], playlists: TagPlaylist[]  }>;
-    findSongAndPlaylistByTag(tag: string, limit: number): Promise<{ songs: TagSong[], playlists: TagPlaylist[]  }>;
+    findSongAndPlaylistByTags(tags: string[], limit: number): Promise<SongsAndPlaylists>;
+    findSongAndPlaylistByTag(tag: string, limit: number): Promise<SongsAndPlaylists>;
     getTagsFromSong(song_id: number): Promise<TagSong[]>;
     countTagByUsage(tags: TagSong[]): Promise<TagCount[]>;
 }

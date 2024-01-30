@@ -1,4 +1,4 @@
-import { ITagSongRepository, SongAndPlaylist } from "../../../repositories/TagRepository";
+import { ITagSongRepository, SongAndPlaylist, SongsAndPlaylists } from "../../../repositories/TagRepository";
 import { TagSongOrPlaylist } from "../../../repositories/typeorm/mysql/TypeormTagRepository";
 import { cleanObj } from "../../../utils/cleanObj";
 import { IGetFeaturedSongsDTO } from "./GetFeaturedSongsDTO";
@@ -19,20 +19,20 @@ export class GetFeaturedSongsService {
         return cleanObj(uniqueSongsAndPlaylists) as TagSongOrPlaylist;
     }
 
-    removeDuplicates(songsAndPlaylists: TagSongOrPlaylist) {
-        const uniqueSongsAndPlaylists: TagSongOrPlaylist = {
+    removeDuplicates(songsAndPlaylists: SongsAndPlaylists) {
+        const uniqueSongsAndPlaylists: SongsAndPlaylists = {
             songs: [],
             playlists: []
         };
         
         songsAndPlaylists.songs.forEach((song) => {
-            if (!uniqueSongsAndPlaylists.songs.some((s) => s.song_idSong === song.song_idSong)) {
+            if (!uniqueSongsAndPlaylists.songs.some((s) => s.song_id === song.song_id)) {
               uniqueSongsAndPlaylists.songs.push(song);
             }
         });
       
         songsAndPlaylists.playlists.forEach((playlist) => {
-            if (!uniqueSongsAndPlaylists.playlists.some((p) => p.playlist_idPlaylist === playlist.playlist_idPlaylist)) {
+            if (!uniqueSongsAndPlaylists.playlists.some((p) => p.playlist_id === playlist.playlist_id)) {
                 uniqueSongsAndPlaylists.playlists.push(playlist);
             }
         });
