@@ -39,7 +39,8 @@ export interface ITagPlaylistRepository extends GenericRepository<TagPlaylist> {
 
 export interface ITagSongRepository extends GenericRepository<TagSong> {
     findByName(name: string): Promise<TagSong>;
-    findSongAndPlaylistByTags(tags: string[], limit: number): Promise<TagSongOrPlaylist>;
+    findSongAndPlaylistByTags(tags: string[], limit: number): Promise<{ songs: TagSong[], playlists: TagPlaylist[]  }>;
+    findSongAndPlaylistByTag(tag: string, limit: number): Promise<{ songs: TagSong[], playlists: TagPlaylist[]  }>;
     getTagsFromSong(song_id: number): Promise<TagSong[]>;
     countTagByUsage(tags: TagSong[]): Promise<TagCount[]>;
 }
