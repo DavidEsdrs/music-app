@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { Tag } from "../../../entities/Tag";
+import { TagPlaylist, TagSong } from "../../../entities/Tag";
 import { ICreateTagDTO } from "./CreateTagDTO";
 
 interface ICreateTagService {
-    execute(args: ICreateTagDTO): Promise<Tag>;
+    execute(args: ICreateTagDTO): Promise<{ tag_song: TagSong, tag_playlist: TagPlaylist }>;
 }
 
 export class CreateTagController {
