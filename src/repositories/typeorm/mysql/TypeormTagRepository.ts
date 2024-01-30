@@ -115,22 +115,41 @@ export const TypeormTagSongRepository = AppDataSource.getRepository(TagSong).ext
         return playlists;
     },
     async findSongAndPlaylistByTags(tags: string[], limit: number = 10) {
-        const songsAndPlaylists = await this.
-            createQueryBuilder("tag").
-            leftJoinAndSelect("songs", "song", "tag.song_id=song.idSong").
-            where("tag.name IN (:...tags)", { tags }).
-            limit(limit).
-            getRawMany();
-
-        const sps: TagSongOrPlaylist = {
-            songs: [],
-            playlists: []
-        };
-        
-        songsAndPlaylists.forEach((sp: any) => sp.song_idSong ? sps.songs.push(sp) : sps.playlists.push(sp));
-        return sps;
+        const tagSongRepository = AppDataSource.getRepository(TagSong);
+        const tagPlaylistRepository = AppDataSource.getRepository(TagPlaylist);
+    
+        const songs = await tagSongRepository
+            .createQueryBuilder("tagSong")
+            .where("tagSong.name IN (:...tags)", { tags })
+            .limit(limit)
+            .getMany();
+    
+        const playlists = await tagPlaylistRepository
+            .createQueryBuilder("tagPlaylist")
+            .where("tagPlaylist.name IN (:...tags)", { tags })
+            .limit(limit)
+            .getMany();
+    
+        return { songs, playlists };
     },
-
+    async findSongAndPlaylistByTag(tag: string, limit: number = 10) {
+        const tagSongRepository = AppDataSource.getRepository(TagSong);
+        const tagPlaylistRepository = AppDataSource.getRepository(TagPlaylist);
+    
+        const songs = await tagSongRepository
+            .createQueryBuilder("tagSong")
+            .where("tagSong.name = :tag", { tag })
+            .limit(limit)
+            .getMany();
+    
+        const playlists = await tagPlaylistRepository
+            .createQueryBuilder("tagPlaylist")
+            .where("tagPlaylist.name = :tag", { tag })
+            .limit(limit)
+            .getMany();
+    
+        return { songs, playlists };
+    },
     async getTagsFromSong(song_id: number) {
         const tagsFromSong = await this.query(`
             SELECT *
